@@ -4,6 +4,7 @@
   },
   "nav": {
     "skipToContent": "Aller au contenu principal",
+    "breadcrumb": "Fil d'ariane",
     "home": "Accueil",
     "leaderboard": "Classement",
     "admin": "Back-office",
@@ -13,7 +14,9 @@
     "logout": "Déconnexion"
   },
   "common": {
-    "genericError": "Une erreur est survenue, réessayez."
+    "genericError": "Une erreur est survenue, réessayez.",
+    "retry": "Réessayer",
+    "questionsCount": "{count} questions"
   },
   "quiz": {
     "difficulty": {
@@ -47,8 +50,8 @@
     }
   },
   "home": {
-    "title": "Thèmes",
-    "subtitle": "Choisissez un thème pour découvrir ses quiz.",
+    "tagline": "La culture générale prend le large.",
+    "sectionLabel": "Choisissez une destination",
     "loading": "Chargement des thèmes…",
     "loadError": "Impossible de charger les thèmes.",
     "empty": "Aucun thème n’est disponible pour le moment."
@@ -58,15 +61,12 @@
     "notFound": "Thème introuvable.",
     "quizzesLoading": "Chargement des quiz…",
     "quizzesError": "Impossible de charger les quiz.",
-    "empty": "Aucun quiz publié pour ce thème pour le moment.",
-    "quizMeta": "{difficulty} · {count} questions"
+    "empty": "Aucun quiz publié pour ce thème pour le moment."
   },
   "quizDetail": {
     "loading": "Chargement du quiz…",
     "notFound": "Quiz introuvable.",
-    "difficultyLabel": "Difficulté :",
-    "questionsLabel": "Questions :",
-    "timeLimitLabel": "Temps imparti :",
+    "durationValue": "{minutes} min",
     "start": "Commencer le quiz",
     "seoTitle": "{title} — Portulan"
   },
