@@ -4,7 +4,7 @@ import { onMounted, ref, watch } from 'vue';
 import BaseAlert from '@/components/ui/BaseAlert.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
-import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import BaseSkeleton from '@/components/ui/BaseSkeleton.vue';
 import RouteProgress from '../components/RouteProgress.vue';
 import { useQuizQuery } from '../api/quizzes';
 import { useQuizSession } from '../composables/useQuizSession';
@@ -62,11 +62,26 @@ const canSubmit = () => {
 
 <template>
   <section class="mx-auto max-w-2xl">
-    <LoadingSpinner v-if="session.phase.value === 'loading'" :label="$t('quizPlay.loading')" />
+    <div v-if="session.status.value === 'error'" class="space-y-3">
+      <BaseAlert variant="error" role="alert">
+        {{ session.errorMessage.value ?? $t('quizPlay.error') }}
+      </BaseAlert>
+      <BaseButton type="button" variant="secondary" @click="session.retry()">
+        {{ $t('common.retry') }}
+      </BaseButton>
+    </div>
 
-    <BaseAlert v-else-if="session.status.value === 'error'" variant="error" role="alert">
-      {{ session.errorMessage.value ?? $t('quizPlay.error') }}
-    </BaseAlert>
+    <div v-else-if="session.phase.value === 'loading'">
+      <p class="sr-only" role="status">{{ $t('quizPlay.loading') }}</p>
+      <div aria-hidden="true">
+        <BaseSkeleton class="h-6 w-full max-w-xs" />
+        <BaseSkeleton class="mt-6 h-6 w-full" />
+        <BaseSkeleton class="mt-2 h-6 w-2/3" />
+        <div class="mt-4 space-y-2">
+          <BaseSkeleton v-for="n in 4" :key="n" class="h-11 w-full rounded-lg" />
+        </div>
+      </div>
+    </div>
 
     <template v-else-if="session.phase.value === 'playing' && session.currentQuestion.value">
       <RouteProgress
@@ -102,13 +117,13 @@ const canSubmit = () => {
             <label
               v-for="choice in session.currentQuestion.value.choices"
               :key="choice.id"
-              class="flex cursor-pointer items-center gap-3 rounded-lg border border-hairline p-3 hover:bg-bg has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent-primary"
+              class="flex cursor-pointer items-center gap-3 rounded-lg border border-hairline p-3 hover:bg-bg has-[:checked]:border-accent-primary has-[:checked]:bg-accent-primary/5 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent-primary"
             >
               <input
                 v-if="session.currentQuestion.value.type === 'MULTIPLE_CHOICE'"
                 type="checkbox"
                 :checked="selectedChoiceIds.includes(choice.id)"
-                class="h-4 w-4"
+                class="h-4 w-4 accent-accent-primary"
                 @change="
                   toggleMultipleChoice(choice.id, ($event.target as HTMLInputElement).checked)
                 "
@@ -118,7 +133,7 @@ const canSubmit = () => {
                 type="radio"
                 name="choice"
                 :checked="selectedChoiceIds.includes(choice.id)"
-                class="h-4 w-4"
+                class="h-4 w-4 accent-accent-primary"
                 @change="toggleSingleChoice(choice.id)"
               />
               <span>{{ choice.label }}</span>
@@ -183,9 +198,12 @@ const canSubmit = () => {
       }}</BaseButton>
     </template>
 
-    <LoadingSpinner
-      v-else-if="session.phase.value === 'finishing'"
-      :label="$t('quizPlay.finishing')"
-    />
+    <div v-else-if="session.phase.value === 'finishing'">
+      <p class="sr-only" role="status">{{ $t('quizPlay.finishing') }}</p>
+      <div aria-hidden="true">
+        <BaseSkeleton class="h-6 w-full max-w-xs" />
+        <BaseSkeleton class="mt-6 h-24 w-full rounded-lg" />
+      </div>
+    </div>
   </section>
 </template>

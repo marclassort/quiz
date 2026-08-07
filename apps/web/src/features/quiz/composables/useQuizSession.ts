@@ -41,6 +41,16 @@ export function useQuizSession(quizSlug: string) {
   const lastResult = ref<AnswerResult | null>(null);
   const errorMessage = ref<string | null>(null);
 
+  // Reprise après erreur (claude.md §3 : un message d'erreur dit quoi faire) :
+  // chaque action publique s'enregistre elle-même ici avant de s'exécuter, pour
+  // que `retry()` puisse la rejouer telle quelle sans que l'appelant ait à se
+  // souvenir de quelle étape a échoué ni avec quels arguments.
+  let lastAction: (() => Promise<void>) | null = null;
+
+  async function retry(): Promise<void> {
+    await lastAction?.();
+  }
+
   function persistAttemptId(id: string) {
     sessionStorage.setItem(storageKey(quizSlug), id);
   }
@@ -50,6 +60,7 @@ export function useQuizSession(quizSlug: string) {
   }
 
   async function initialize(): Promise<void> {
+    lastAction = initialize;
     status.value = 'pending';
     phase.value = 'loading';
     errorMessage.value = null;
@@ -92,6 +103,7 @@ export function useQuizSession(quizSlug: string) {
   async function answer(input: SubmitAnswerInput): Promise<void> {
     if (!attemptId.value) return;
 
+    lastAction = () => answer(input);
     status.value = 'pending';
     errorMessage.value = null;
 
@@ -109,6 +121,7 @@ export function useQuizSession(quizSlug: string) {
   async function continueToNext(): Promise<void> {
     if (!attemptId.value) return;
 
+    lastAction = continueToNext;
     lastResult.value = null;
     status.value = 'pending';
     phase.value = 'loading';
@@ -132,6 +145,7 @@ export function useQuizSession(quizSlug: string) {
   async function finish(): Promise<void> {
     if (!attemptId.value) return;
 
+    lastAction = finish;
     status.value = 'pending';
     phase.value = 'finishing';
 
@@ -161,5 +175,6 @@ export function useQuizSession(quizSlug: string) {
     answer,
     continueToNext,
     finish,
+    retry,
   };
 }
