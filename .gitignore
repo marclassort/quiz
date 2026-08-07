@@ -12,6 +12,7 @@ coverage/
 test-results/
 playwright-report/
 blob-report/
+*.tsbuildinfo
 
 # le projet est pnpm-only (cf. claude.md §1) — pas de lockfile npm/yarn
 package-lock.json
