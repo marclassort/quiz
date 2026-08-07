@@ -13,7 +13,9 @@ import type {
   UpdateAcceptedAnswerInput,
   UpdateChoiceInput,
   UpdateQuestionInput,
+  UpdateQuestionPayloadInput,
 } from '@quiz/shared';
+import { mapClickPayloadInputSchema, mapPlacePayloadInputSchema } from '@quiz/shared';
 
 import { normalizeFreeText } from '../../attempts/free-text-correction/normalize';
 import { Prisma } from '../../generated/prisma/client';
@@ -107,6 +109,42 @@ export class AdminQuestionsService {
 
     return this.prisma.$transaction(async (tx) => {
       const updated = await tx.question.update({ where: { id }, data: input });
+      await this.auditLogService.record(id, adminUserId, 'updated', question.quiz.publishedAt, tx);
+      return updated;
+    });
+  }
+
+  /**
+   * `PUT /admin/questions/:id/payload` (data-and-api.md §4) : validation Zod
+   * par type. `datasetVersion` n'est pas fourni par l'admin — dérivé de la
+   * version actuelle du `GeoDataset` référencé, pour éviter qu'une valeur
+   * saisie à la main dérive de la réalité (voir admin/geo-dataset.ts).
+   */
+  async updatePayload(id: string, input: UpdateQuestionPayloadInput, adminUserId: string) {
+    const question = await this.findOneWithQuiz(id);
+
+    if (question.type !== 'MAP_CLICK' && question.type !== 'MAP_PLACE') {
+      throw new BadRequestException(`Le type ${question.type} ne porte pas de payload.`);
+    }
+
+    const inputSchema =
+      question.type === 'MAP_CLICK' ? mapClickPayloadInputSchema : mapPlacePayloadInputSchema;
+    const parsed = inputSchema.safeParse(input.payload);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+
+    const dataset = await this.prisma.geoDataset.findUnique({
+      where: { id: parsed.data.datasetId },
+    });
+    if (!dataset) {
+      throw new NotFoundException('Dataset introuvable.');
+    }
+
+    const payload = { ...parsed.data, datasetVersion: dataset.version };
+
+    return this.prisma.$transaction(async (tx) => {
+      const updated = await tx.question.update({ where: { id }, data: { payload } });
       await this.auditLogService.record(id, adminUserId, 'updated', question.quiz.publishedAt, tx);
       return updated;
     });

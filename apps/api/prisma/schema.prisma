@@ -37,8 +37,29 @@ enum QuestionType {
   MULTIPLE_CHOICE
   TRUE_FALSE
   FREE_TEXT
+  MAP_CLICK
+  MAP_PLACE
 
   @@map("question_type")
+}
+
+enum GameMode {
+  CLASSIC
+  GEO
+
+  @@map("game_mode")
+}
+
+enum GeoDatasetKind {
+  COUNTRY
+  CAPITAL
+  CITY
+  RIVER
+  LAKE
+  ADMIN_FR
+  OTHER
+
+  @@map("geo_dataset_kind")
 }
 
 enum AnswerReviewStatus {
@@ -115,6 +136,11 @@ model Quiz {
   description       String
   difficulty        QuizDifficulty
   status            QuizStatus     @default(DRAFT)
+  gameMode          GameMode       @default(CLASSIC) @map("game_mode")
+  /// Réservé aux quiz `GEO` ; forme non encore fixée (ADR 001 / lot 3), donc
+  /// pas de schéma Zod dessus pour l'instant — colonne opaque tant qu'un
+  /// besoin concret ne l'exige pas.
+  config            Json?
   timeLimitSeconds  Int?           @map("time_limit_seconds")
   /// Bonus de rapidité activable par quiz, désactivé par défaut (claude.md §6.2) —
   /// champ absent de la liste du §3, ajouté ici car explicitement requis par la
@@ -139,6 +165,11 @@ model Question {
   type        QuestionType
   statement   String
   imageUrl    String?      @map("image_url")
+  /// `MAP_CLICK` / `MAP_PLACE` uniquement (data-and-api.md §2) ; nul pour les
+  /// types classiques, qui portent déjà leurs données dans Choice/AcceptedAnswer.
+  /// Validé applicativement par les schémas Zod discriminés de
+  /// `@quiz/shared` (quiz/geo.ts), pas de contrainte SQL sur la forme.
+  payload     Json?
   points      Int          @default(1)
   explanation String
   source      String
@@ -221,14 +252,18 @@ model Attempt {
 }
 
 model AttemptAnswer {
-  id           String   @id @default(uuid()) @db.Uuid
-  attemptId    String   @map("attempt_id") @db.Uuid
-  questionId   String   @map("question_id") @db.Uuid
-  submittedAt  DateTime @default(now()) @map("submitted_at")
-  rawAnswer    Json     @map("raw_answer")
-  isCorrect    Boolean  @map("is_correct")
-  pointsEarned Int      @default(0) @map("points_earned")
-  answerTimeMs Int      @map("answer_time_ms")
+  id             String   @id @default(uuid()) @db.Uuid
+  attemptId      String   @map("attempt_id") @db.Uuid
+  questionId     String   @map("question_id") @db.Uuid
+  submittedAt    DateTime @default(now()) @map("submitted_at")
+  rawAnswer      Json     @map("raw_answer")
+  isCorrect      Boolean  @map("is_correct")
+  pointsEarned   Int      @default(0) @map("points_earned")
+  answerTimeMs   Int      @map("answer_time_ms")
+  /// `MAP_CLICK`/`MAP_PLACE` uniquement (data-and-api.md §3) : version du
+  /// dataset utilisée au moment de la réponse, pour que la correction reste
+  /// reproductible après mise à jour d'un dataset (game-rules.md §5).
+  datasetVersion String?  @map("dataset_version")
 
   attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
   question Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
@@ -250,6 +285,26 @@ model AnswerReview {
   reviewer User?    @relation("AnswerReviewReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
 
   @@map("answer_reviews")
+}
+
+/// Métadonnées d'un dataset cartographique (data-and-api.md §2) ; les
+/// géométries elles-mêmes sont servies en TopoJSON statique versionné depuis
+/// apps/web/public/geo/<slug>/<version>.topojson, pas depuis cette table
+/// (sauf besoin avéré de requête spatiale, justifié par ADR — cf. ADR 001).
+model GeoDataset {
+  id              String         @id @default(uuid()) @db.Uuid
+  slug            String         @unique
+  name            String
+  kind            GeoDatasetKind
+  scope           String
+  sourceName      String         @map("source_name")
+  sourceUrl       String         @map("source_url")
+  license         String
+  attributionText String         @map("attribution_text")
+  version         String
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  @@map("geo_datasets")
 }
 
 model UserStats {
