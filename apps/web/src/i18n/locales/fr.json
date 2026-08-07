@@ -28,6 +28,7 @@
   "auth": {
     "login": {
       "title": "Connexion",
+      "subtitle": "Retrouvez votre progression et votre classement.",
       "emailLabel": "Email",
       "passwordLabel": "Mot de passe",
       "invalidForm": "Vérifiez votre email et votre mot de passe.",
@@ -94,12 +95,13 @@
     "loading": "Calcul du résultat…",
     "loadError": "Impossible de charger le résultat.",
     "title": "Résultat",
-    "correctAnswers": "Bonnes réponses :",
-    "duration": "Durée :",
+    "correctAnswers": "Bonnes réponses",
+    "duration": "Durée",
     "durationValue": "{minutes} min {seconds}s",
     "trainingModeNotice": "Cette partie n'a pas compté pour le classement (mode entraînement : seule la première partie d'un quiz y est comptabilisée).",
     "registerIncitation": "Créez un compte pour conserver vos résultats et entrer au classement.",
     "createAccount": "Créer mon compte",
+    "viewLeaderboard": "Voir le classement",
     "backToQuiz": "Retour au quiz"
   },
   "pagination": {
@@ -113,6 +115,7 @@
     "loading": "Chargement…",
     "loadError": "Impossible de charger votre profil.",
     "statsTitle": "Mes statistiques",
+    "statsLoadError": "Impossible de charger vos statistiques.",
     "stats": {
       "totalScore": "Score total",
       "quizzesCompleted": "Quiz terminés",

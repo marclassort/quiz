@@ -3,8 +3,9 @@ import { computed, ref, watch } from 'vue';
 import type { LeaderboardScope } from '@quiz/shared';
 
 import BaseAlert from '@/components/ui/BaseAlert.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 import BasePagination from '@/components/ui/BasePagination.vue';
-import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import BaseSkeleton from '@/components/ui/BaseSkeleton.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useThemesQuery } from '@/features/quiz/api/themes';
 import { useLeaderboardQuery, useMyRankQuery } from '../api/leaderboard';
@@ -36,6 +37,7 @@ const {
   data: leaderboardPage,
   status,
   error,
+  refetch,
 } = useLeaderboardQuery(
   () => scope.value,
   () => themeSlug.value,
@@ -93,10 +95,20 @@ const myRankMessage = computed(() => {
       </BaseAlert>
     </div>
 
-    <LoadingSpinner v-if="status === 'pending'" :label="$t('leaderboard.loading')" class="mt-6" />
-    <BaseAlert v-else-if="status === 'error'" variant="error" role="alert" class="mt-6">
-      {{ error?.message ?? $t('leaderboard.loadError') }}
-    </BaseAlert>
+    <div v-if="status === 'pending'" class="mt-6">
+      <p class="sr-only" role="status">{{ $t('leaderboard.loading') }}</p>
+      <div class="space-y-2" aria-hidden="true">
+        <BaseSkeleton v-for="n in 6" :key="n" class="h-8 w-full" />
+      </div>
+    </div>
+    <div v-else-if="status === 'error'" class="mt-6 space-y-3">
+      <BaseAlert variant="error" role="alert">
+        {{ error?.message ?? $t('leaderboard.loadError') }}
+      </BaseAlert>
+      <BaseButton type="button" variant="secondary" @click="refetch()">
+        {{ $t('common.retry') }}
+      </BaseButton>
+    </div>
 
     <template v-else-if="leaderboardPage">
       <p v-if="leaderboardPage.items.length === 0" class="mt-6 text-ink-muted">
