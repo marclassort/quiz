@@ -1,6 +1,6 @@
-# Quiz Histoire de France
+# Quiz 
 
-Application de quiz sur l'histoire de France. Le corpus initial porte sur la période napoléonienne (Consulat et Empire, 1799-1815).
+Application de quiz sur la culture générale.
 
 Un visiteur anonyme peut jouer immédiatement à n'importe quel quiz publié. Un utilisateur inscrit voit en plus son historique, ses statistiques et sa position dans un classement global. Un administrateur gère le catalogue de quiz et de questions via un back-office dédié.
 
