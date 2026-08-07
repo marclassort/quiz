@@ -7,7 +7,7 @@ import { updateMeSchema } from '@quiz/shared';
 import BaseAlert from '@/components/ui/BaseAlert.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
-import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import BaseSkeleton from '@/components/ui/BaseSkeleton.vue';
 import { ApiError } from '@/lib/http';
 import { useMeQuery } from '@/features/auth/api/auth';
 import { exportMe, useDeleteMeMutation, useMyStatsQuery, useUpdateMeMutation } from '../api/me';
@@ -15,8 +15,8 @@ import { exportMe, useDeleteMeMutation, useMyStatsQuery, useUpdateMeMutation } f
 const { t } = useI18n();
 const router = useRouter();
 
-const { data: me, status: meStatus, error: meError } = useMeQuery();
-const { data: stats, status: statsStatus } = useMyStatsQuery();
+const { data: me, status: meStatus, error: meError, refetch: refetchMe } = useMeQuery();
+const { data: stats, status: statsStatus, refetch: refetchStats } = useMyStatsQuery();
 const { mutateAsync: updateMe, isLoading: isSaving } = useUpdateMeMutation();
 const { mutateAsync: deleteMe, isLoading: isDeleting } = useDeleteMeMutation();
 
@@ -96,32 +96,63 @@ async function onDeleteConfirmed() {
   <section class="mx-auto max-w-xl">
     <h1 class="font-display text-2xl font-bold">{{ $t('profile.title') }}</h1>
 
-    <LoadingSpinner v-if="meStatus === 'pending'" :label="$t('profile.loading')" />
-    <BaseAlert v-else-if="meStatus === 'error'" variant="error" role="alert">
-      {{ meError?.message ?? $t('profile.loadError') }}
-    </BaseAlert>
+    <div v-if="meStatus === 'pending'" class="mt-4">
+      <p class="sr-only" role="status">{{ $t('profile.loading') }}</p>
+      <div aria-hidden="true">
+        <BaseSkeleton class="h-4 w-48" />
+        <BaseSkeleton class="mt-8 h-5 w-32" />
+        <div class="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <BaseSkeleton class="h-16 w-full rounded-lg" />
+          <BaseSkeleton class="h-16 w-full rounded-lg" />
+          <BaseSkeleton class="h-16 w-full rounded-lg" />
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="meStatus === 'error' || (meStatus === 'success' && !me)" class="mt-4 space-y-3">
+      <BaseAlert variant="error" role="alert">
+        {{ meError?.message ?? $t('profile.loadError') }}
+      </BaseAlert>
+      <BaseButton type="button" variant="secondary" @click="refetchMe()">
+        {{ $t('common.retry') }}
+      </BaseButton>
+    </div>
 
     <template v-else-if="me">
       <p class="mt-1 text-sm text-ink-muted">{{ me.email }}</p>
 
       <div class="mt-6">
         <h2 class="text-lg font-semibold">{{ $t('profile.statsTitle') }}</h2>
-        <LoadingSpinner v-if="statsStatus === 'pending'" :label="$t('profile.loading')" />
-        <dl
-          v-else-if="stats"
-          class="mt-2 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-ink-muted sm:grid-cols-3"
-        >
-          <div>
-            <dt class="font-medium">{{ $t('profile.stats.totalScore') }}</dt>
-            <dd class="font-data tabular-nums">{{ stats.totalScore }}</dd>
+        <div v-if="statsStatus === 'pending'" class="mt-2">
+          <p class="sr-only" role="status">{{ $t('profile.loading') }}</p>
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-3" aria-hidden="true">
+            <BaseSkeleton class="h-16 w-full rounded-lg" />
+            <BaseSkeleton class="h-16 w-full rounded-lg" />
+            <BaseSkeleton class="h-16 w-full rounded-lg" />
           </div>
-          <div>
-            <dt class="font-medium">{{ $t('profile.stats.quizzesCompleted') }}</dt>
-            <dd class="font-data tabular-nums">{{ stats.quizzesCompleted }}</dd>
+        </div>
+        <div v-else-if="statsStatus === 'error'" class="mt-2 space-y-3">
+          <BaseAlert variant="error" role="alert">{{ $t('profile.statsLoadError') }}</BaseAlert>
+          <BaseButton type="button" variant="secondary" @click="refetchStats()">
+            {{ $t('common.retry') }}
+          </BaseButton>
+        </div>
+        <dl v-else-if="stats" class="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div class="rounded-lg border border-hairline p-3">
+            <dt class="text-xs text-ink-muted">{{ $t('profile.stats.totalScore') }}</dt>
+            <dd class="font-data text-lg font-semibold tabular-nums">{{ stats.totalScore }}</dd>
           </div>
-          <div>
-            <dt class="font-medium">{{ $t('profile.stats.accuracy') }}</dt>
-            <dd class="font-data tabular-nums">{{ accuracyLabel(stats.averageAccuracy) }}</dd>
+          <div class="rounded-lg border border-hairline p-3">
+            <dt class="text-xs text-ink-muted">{{ $t('profile.stats.quizzesCompleted') }}</dt>
+            <dd class="font-data text-lg font-semibold tabular-nums">
+              {{ stats.quizzesCompleted }}
+            </dd>
+          </div>
+          <div class="rounded-lg border border-hairline p-3">
+            <dt class="text-xs text-ink-muted">{{ $t('profile.stats.accuracy') }}</dt>
+            <dd class="font-data text-lg font-semibold tabular-nums">
+              {{ accuracyLabel(stats.averageAccuracy) }}
+            </dd>
           </div>
         </dl>
         <RouterLink

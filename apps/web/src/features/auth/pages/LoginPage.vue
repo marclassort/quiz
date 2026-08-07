@@ -41,6 +41,7 @@ async function onSubmit() {
 <template>
   <section class="mx-auto max-w-sm">
     <h1 class="font-display text-2xl font-bold">{{ $t('auth.login.title') }}</h1>
+    <p class="mt-2 text-sm text-ink-muted">{{ $t('auth.login.subtitle') }}</p>
 
     <form class="mt-6 space-y-4" novalidate @submit.prevent="onSubmit">
       <BaseInput

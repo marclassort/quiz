@@ -28,6 +28,7 @@
   "auth": {
     "login": {
       "title": "Connexion",
+      "subtitle": "Retrouvez votre progression et votre classement.",
       "emailLabel": "Email",
       "passwordLabel": "Mot de passe",
       "invalidForm": "Vérifiez votre email et votre mot de passe.",
@@ -114,6 +115,7 @@
     "loading": "Chargement…",
     "loadError": "Impossible de charger votre profil.",
     "statsTitle": "Mes statistiques",
+    "statsLoadError": "Impossible de charger vos statistiques.",
     "stats": {
       "totalScore": "Score total",
       "quizzesCompleted": "Quiz terminés",
