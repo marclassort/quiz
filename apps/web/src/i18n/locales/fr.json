@@ -1,0 +1,370 @@
+{
+  "app": {
+    "title": "Quiz Histoire de France"
+  },
+  "nav": {
+    "skipToContent": "Aller au contenu principal",
+    "home": "Accueil",
+    "leaderboard": "Classement",
+    "admin": "Back-office",
+    "login": "Connexion",
+    "register": "Inscription",
+    "profile": "Profil",
+    "logout": "Déconnexion"
+  },
+  "common": {
+    "genericError": "Une erreur est survenue, réessayez."
+  },
+  "quiz": {
+    "difficulty": {
+      "EASY": "Facile",
+      "MEDIUM": "Intermédiaire",
+      "HARD": "Difficile"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "emailLabel": "Email",
+      "passwordLabel": "Mot de passe",
+      "invalidForm": "Vérifiez votre email et votre mot de passe.",
+      "submit": "Se connecter",
+      "submitting": "Connexion…",
+      "noAccount": "Pas encore de compte ?",
+      "registerLink": "Inscrivez-vous"
+    },
+    "register": {
+      "title": "Inscription",
+      "subtitle": "Vos éventuelles parties déjà jouées seront automatiquement rattachées à votre nouveau compte.",
+      "emailLabel": "Email",
+      "displayNameLabel": "Nom public (3 à 24 caractères)",
+      "passwordLabel": "Mot de passe (12 caractères minimum)",
+      "invalidForm": "Formulaire invalide.",
+      "submit": "Créer mon compte",
+      "submitting": "Création…",
+      "hasAccount": "Déjà un compte ?",
+      "loginLink": "Connectez-vous"
+    }
+  },
+  "home": {
+    "title": "Thèmes",
+    "subtitle": "Choisissez un thème pour découvrir ses quiz.",
+    "loading": "Chargement des thèmes…",
+    "loadError": "Impossible de charger les thèmes.",
+    "empty": "Aucun thème n’est disponible pour le moment."
+  },
+  "theme": {
+    "loading": "Chargement du thème…",
+    "notFound": "Thème introuvable.",
+    "quizzesLoading": "Chargement des quiz…",
+    "quizzesError": "Impossible de charger les quiz.",
+    "empty": "Aucun quiz publié pour ce thème pour le moment.",
+    "quizMeta": "{difficulty} · {count} questions"
+  },
+  "quizDetail": {
+    "loading": "Chargement du quiz…",
+    "notFound": "Quiz introuvable.",
+    "difficultyLabel": "Difficulté :",
+    "questionsLabel": "Questions :",
+    "timeLimitLabel": "Temps imparti :",
+    "start": "Commencer le quiz",
+    "seoTitle": "{title} — Quiz Histoire de France"
+  },
+  "quizPlay": {
+    "loading": "Chargement de la partie…",
+    "error": "Une erreur est survenue.",
+    "answerLabel": "Votre réponse",
+    "submit": "Valider ma réponse",
+    "submitting": "Envoi…",
+    "correct": "Bonne réponse !",
+    "incorrect": "Réponse incorrecte.",
+    "pointsEarned": "(+{points} point) | (+{points} points)",
+    "expectedAnswer": "Réponse attendue :",
+    "continue": "Continuer",
+    "finishing": "Calcul du résultat…",
+    "errors": {
+      "start": "Impossible de démarrer la partie.",
+      "answer": "Impossible d’enregistrer la réponse.",
+      "next": "Impossible de charger la question suivante.",
+      "finish": "Impossible de terminer la partie."
+    }
+  },
+  "quizResult": {
+    "loading": "Calcul du résultat…",
+    "loadError": "Impossible de charger le résultat.",
+    "title": "Résultat",
+    "correctAnswers": "Bonnes réponses :",
+    "duration": "Durée :",
+    "durationValue": "{minutes} min {seconds}s",
+    "trainingModeNotice": "Cette partie n'a pas compté pour le classement (mode entraînement : seule la première partie d'un quiz y est comptabilisée).",
+    "registerIncitation": "Créez un compte pour conserver vos résultats et entrer au classement.",
+    "createAccount": "Créer mon compte",
+    "backToQuiz": "Retour au quiz"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "status": "Page {page} / {totalPages}"
+  },
+  "profile": {
+    "title": "Profil",
+    "loading": "Chargement…",
+    "loadError": "Impossible de charger votre profil.",
+    "statsTitle": "Mes statistiques",
+    "stats": {
+      "totalScore": "Score total",
+      "quizzesCompleted": "Quiz terminés",
+      "accuracy": "Précision moyenne"
+    },
+    "viewHistory": "Voir mon historique",
+    "settingsTitle": "Paramètres",
+    "displayNameLabel": "Nom public (3 à 24 caractères)",
+    "excludeFromLeaderboard": "Ne pas apparaître au classement",
+    "invalidForm": "Formulaire invalide.",
+    "saved": "Profil mis à jour.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "dataTitle": "Mes données",
+    "exportDescription": "Téléchargez une copie de toutes vos données personnelles au format JSON (droit à la portabilité).",
+    "export": "Exporter mes données",
+    "exporting": "Export…",
+    "exportError": "Impossible d’exporter vos données.",
+    "dangerZoneTitle": "Supprimer mon compte",
+    "deleteDescription": "Cette action est irréversible : vos données personnelles seront supprimées ou anonymisées immédiatement. L’historique agrégé de vos parties (scores) est conservé de façon anonyme.",
+    "deleteAccount": "Supprimer mon compte",
+    "deleteConfirmPrompt": "Confirmez-vous la suppression définitive de votre compte ?",
+    "deleteConfirm": "Confirmer la suppression",
+    "deleteCancel": "Annuler",
+    "deleting": "Suppression…",
+    "deleteError": "Impossible de supprimer votre compte."
+  },
+  "profileHistory": {
+    "title": "Historique des parties",
+    "loading": "Chargement de l’historique…",
+    "loadError": "Impossible de charger votre historique.",
+    "empty": "Vous n’avez pas encore joué de quiz.",
+    "trainingMode": "Mode entraînement"
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "scopeLabel": "Vue :",
+    "scope": {
+      "global": "Global",
+      "theme": "Par thème",
+      "30d": "30 derniers jours"
+    },
+    "themeLabel": "Thème :",
+    "loading": "Chargement du classement…",
+    "loadError": "Impossible de charger le classement.",
+    "empty": "Personne n’est encore éligible au classement (minimum 3 quiz terminés).",
+    "columns": {
+      "rank": "Rang",
+      "displayName": "Nom",
+      "totalScore": "Score",
+      "accuracy": "Précision",
+      "quizzesCompleted": "Quiz terminés"
+    },
+    "myRank": {
+      "value": "Votre position : {rank}",
+      "notEligible": "Terminez au moins 3 quiz pour apparaître au classement.",
+      "optedOut": "Vous avez choisi de ne pas apparaître au classement (modifiable dans votre profil)."
+    }
+  },
+  "admin": {
+    "nav": {
+      "themes": "Thèmes",
+      "quizzes": "Quiz",
+      "answerReviews": "Révision des réponses"
+    },
+    "dashboard": {
+      "title": "Back-office",
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger les statistiques.",
+      "totalAttempts": "Parties commencées",
+      "finishedAttempts": "Parties terminées",
+      "totalQuizzes": "Quiz",
+      "totalQuestions": "Questions",
+      "successRatesTitle": "Taux de réussite par question",
+      "noData": "Pas encore de données de jeu.",
+      "columns": {
+        "statement": "Question",
+        "quiz": "Quiz",
+        "successRate": "Taux de réussite"
+      }
+    },
+    "themes": {
+      "title": "Thèmes",
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger les thèmes.",
+      "create": "Créer un thème",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "invalidForm": "Formulaire invalide.",
+      "fields": {
+        "slug": "Slug",
+        "name": "Nom",
+        "description": "Description",
+        "position": "Position"
+      }
+    },
+    "quizzes": {
+      "title": "Quiz",
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger les quiz.",
+      "empty": "Aucun quiz ne correspond à ces filtres.",
+      "create": "Créer un quiz",
+      "import": "Importer (JSON)",
+      "importing": "Import…",
+      "invalidImportFile": "Fichier invalide : vérifiez le format JSON attendu.",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "saved": "Quiz mis à jour.",
+      "invalidForm": "Formulaire invalide.",
+      "editTitle": "Modifier le quiz",
+      "delete": "Supprimer",
+      "publish": "Publier",
+      "unpublish": "Dépublier",
+      "preview": "Prévisualiser",
+      "export": "Exporter (JSON)",
+      "questionsTitle": "Questions",
+      "addQuestion": "Ajouter une question",
+      "noQuestions": "Aucune question pour ce quiz.",
+      "fields": {
+        "theme": "Thème",
+        "themePlaceholder": "Choisir un thème",
+        "slug": "Slug",
+        "title": "Titre",
+        "description": "Description",
+        "difficulty": "Difficulté",
+        "timeLimitSeconds": "Temps imparti (secondes)",
+        "speedBonusEnabled": "Bonus de rapidité activé"
+      },
+      "filters": {
+        "all": "Tous",
+        "theme": "Thème :",
+        "status": "Statut :",
+        "difficulty": "Difficulté :"
+      },
+      "status": {
+        "DRAFT": "Brouillon",
+        "PUBLISHED": "Publié",
+        "ARCHIVED": "Archivé"
+      }
+    },
+    "questions": {
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger la question.",
+      "editTitle": "Modifier la question",
+      "save": "Enregistrer",
+      "saved": "Question mise à jour.",
+      "invalidForm": "Formulaire invalide.",
+      "successRate": "{rate}% de réussite",
+      "choicesTitle": "Choix",
+      "addChoice": "Ajouter un choix",
+      "acceptedAnswersTitle": "Réponses acceptées",
+      "addAcceptedAnswer": "Ajouter une réponse acceptée",
+      "normalizedPreview": "Normalisation appliquée",
+      "missingSource": "source manquante",
+      "missingExplanation": "explication manquante",
+      "auditLogTitle": "Journal des modifications",
+      "noAuditLog": "Aucune modification journalisée (le quiz n'a pas encore été publié).",
+      "auditBy": "par",
+      "unknownAdmin": "un admin",
+      "auditAction": {
+        "created": "Création",
+        "updated": "Modification"
+      },
+      "fields": {
+        "type": "Type",
+        "statement": "Énoncé",
+        "points": "Points",
+        "explanation": "Explication",
+        "source": "Source",
+        "newChoiceLabel": "Nouveau choix",
+        "isCorrect": "Correct",
+        "newAnswerValue": "Nouvelle réponse acceptée",
+        "isPrimary": "Principale"
+      },
+      "type": {
+        "SINGLE_CHOICE": "Choix unique",
+        "MULTIPLE_CHOICE": "Choix multiples",
+        "TRUE_FALSE": "Vrai / Faux",
+        "FREE_TEXT": "Réponse libre"
+      }
+    },
+    "preview": {
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger la prévisualisation.",
+      "badge": "Aperçu admin — comme un joueur, réponses affichées",
+      "correct": "correcte",
+      "primary": "principale",
+      "explanationLabel": "Explication :",
+      "sourceLabel": "Source :",
+      "missing": "(absente)"
+    },
+    "answerReviews": {
+      "title": "Révision des réponses libres",
+      "loading": "Chargement…",
+      "loadError": "Impossible de charger la file de révision.",
+      "empty": "Aucune réponse à réviser.",
+      "filterLabel": "Statut :",
+      "accept": "Accepter",
+      "reject": "Rejeter",
+      "occurrences": "{count} occurrence(s)",
+      "status": {
+        "PENDING": "En attente",
+        "ACCEPTED": "Acceptées",
+        "REJECTED": "Rejetées"
+      }
+    }
+  },
+  "footer": {
+    "legalNotice": "Mentions légales",
+    "privacyPolicy": "Confidentialité",
+    "contact": "Contact"
+  },
+  "legal": {
+    "notice": {
+      "title": "Mentions légales",
+      "editorTitle": "Éditeur du site",
+      "editorText": "[Nom de l'association] — [forme juridique], [adresse complète]. [Numéro SIREN/SIRET le cas échéant]. Directeur de la publication : [Nom].",
+      "hostTitle": "Hébergement",
+      "hostText": "[Nom de l'hébergeur] — [adresse de l'hébergeur].",
+      "ipTitle": "Propriété intellectuelle",
+      "ipText": "Le contenu pédagogique (questions, explications) est sourcé et référencé individuellement dans chaque quiz. Toute réutilisation est soumise à l'accord préalable de l'éditeur, sauf mention contraire.",
+      "placeholderNotice": "Les informations ci-dessus sont un gabarit à compléter avec les coordonnées réelles de l'éditeur avant toute mise en production."
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "intro": "Cette page décrit les données personnelles traitées par ce site, les finalités de ce traitement et les moyens d'exercer vos droits.",
+      "controllerTitle": "Responsable du traitement",
+      "controllerText": "Voir les mentions légales pour l'identité de l'éditeur, responsable du traitement des données décrites ci-dessous.",
+      "dataTitle": "Données collectées",
+      "dataAccount": "Pour un compte utilisateur : adresse email, mot de passe (haché, jamais stocké en clair), nom public affiché au classement, historique de vos parties (scores, réponses données, horodatage) et vos préférences (visibilité au classement).",
+      "dataAnonymous": "Pour un visiteur anonyme : un identifiant technique conservé dans un cookie, permettant de retrouver votre partie en cours sans vous identifier personnellement.",
+      "purposeTitle": "Finalités",
+      "purposeText": "Authentification et gestion de votre compte, suivi de votre progression, calcul du classement, et amélioration du contenu pédagogique via des statistiques agrégées et anonymes (taux de réussite par question).",
+      "cookiesTitle": "Cookies",
+      "cookiesText": "Le site utilise deux cookies techniques strictement nécessaires à son fonctionnement : un cookie de session et un cookie de partie anonyme. Ni l'un ni l'autre ne mesure votre audience ni ne vous suit sur d'autres sites : conformément à la réglementation, ils ne nécessitent pas de bannière de consentement. Aucun cookie de mesure d'audience ni traceur publicitaire n'est utilisé sur ce site.",
+      "retentionTitle": "Durée de conservation",
+      "retentionText": "Vos données sont conservées tant que votre compte existe. En cas de suppression de compte, vos données personnelles sont supprimées ou anonymisées immédiatement ; les statistiques de jeu déjà enregistrées sont conservées sous forme agrégée, dissociées de votre identité.",
+      "rightsTitle": "Vos droits",
+      "rightsText": "Vous disposez d'un droit d'accès et de rectification depuis votre profil, d'un droit à l'effacement et d'un droit à la portabilité de vos données (export JSON), accessibles directement depuis la page Profil. Vous pouvez également vous exclure du classement public sans supprimer votre compte.",
+      "recipientsTitle": "Destinataires des données",
+      "recipientsText": "Vos données ne sont transmises à aucun tiers et ne font l'objet d'aucune revente ni d'aucun profilage publicitaire.",
+      "securityTitle": "Sécurité",
+      "securityText": "Les mots de passe sont hachés (argon2id) et ne sont jamais stockés ni transmis en clair. Les cookies d'authentification sont marqués httpOnly, Secure et SameSite.",
+      "contactTitle": "Contact",
+      "contactText": "Pour toute question ou pour exercer vos droits, rendez-vous sur la page"
+    },
+    "contact": {
+      "title": "Contact",
+      "text": "Pour toute question sur le site, son contenu ou vos données personnelles, vous pouvez nous contacter à l'adresse suivante :",
+      "emailPlaceholder": "[adresse-a-completer]@[domaine].fr",
+      "placeholderNotice": "Adresse à compléter par l'éditeur du site avant toute mise en production."
+    }
+  }
+}

@@ -1,0 +1,18 @@
+node_modules/
+dist/
+build/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+coverage/
+.turbo/
+.vite/
+test-results/
+playwright-report/
+blob-report/
+
+# le projet est pnpm-only (cf. claude.md §1) — pas de lockfile npm/yarn
+package-lock.json
+yarn.lock

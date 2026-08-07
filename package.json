@@ -1,0 +1,30 @@
+{
+  "name": "quiz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Application de quiz sur l'histoire de France — corpus initial : période napoléonienne",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@11.20.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "db:migrate": "pnpm --filter @quiz/api db:migrate",
+    "db:seed": "pnpm --filter @quiz/api db:seed"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.10.0",
+    "globals": "^17.9.0",
+    "prettier": "^3.9.6",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.66.0"
+  }
+}

@@ -1,0 +1,269 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [citext]
+}
+
+enum UserRole {
+  USER
+  ADMIN
+
+  @@map("user_role")
+}
+
+enum QuizDifficulty {
+  EASY
+  MEDIUM
+  HARD
+
+  @@map("quiz_difficulty")
+}
+
+enum QuizStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+
+  @@map("quiz_status")
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  FREE_TEXT
+
+  @@map("question_type")
+}
+
+enum AnswerReviewStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+
+  @@map("answer_review_status")
+}
+
+model User {
+  id              String    @id @default(uuid()) @db.Uuid
+  email           String    @unique @db.Citext
+  passwordHash    String    @map("password_hash")
+  displayName     String    @unique @map("display_name")
+  role            UserRole  @default(USER)
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+
+  /// Token de réinitialisation de mot de passe : usage unique, écrasé à chaque
+  /// nouvelle demande, effacé après consommation (claude.md §5 : expire en 1h).
+  passwordResetTokenHash      String?   @map("password_reset_token_hash")
+  passwordResetTokenExpiresAt DateTime? @map("password_reset_token_expires_at")
+
+  /// Case à cocher "ne pas apparaître au classement" (claude.md §6.4) — champ
+  /// absent du §3, ajouté ici car explicitement requis par cette règle.
+  excludedFromLeaderboard Boolean @default(false) @map("excluded_from_leaderboard")
+
+  attempts             Attempt[]
+  stats                UserStats?
+  reviewedAnswers      AnswerReview[]          @relation("AnswerReviewReviewer")
+  refreshTokens        RefreshToken[]
+  questionAuditEntries QuestionAuditLogEntry[]
+
+  @@map("users")
+}
+
+/// Refresh token en rotation, révocable, stocké en base (claude.md §5) — table
+/// absente de la liste du §3 mais nécessaire pour satisfaire cette exigence.
+model RefreshToken {
+  id                String    @id @default(uuid()) @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  tokenHash         String    @unique @map("token_hash")
+  expiresAt         DateTime  @map("expires_at")
+  revokedAt         DateTime? @map("revoked_at")
+  replacedByTokenId String?   @map("replaced_by_token_id") @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model Theme {
+  id          String @id @default(uuid()) @db.Uuid
+  slug        String @unique
+  name        String
+  description String
+  position    Int
+
+  quizzes Quiz[]
+
+  @@map("themes")
+}
+
+model Quiz {
+  id                String         @id @default(uuid()) @db.Uuid
+  themeId           String         @map("theme_id") @db.Uuid
+  slug              String         @unique
+  title             String
+  description       String
+  difficulty        QuizDifficulty
+  status            QuizStatus     @default(DRAFT)
+  timeLimitSeconds  Int?           @map("time_limit_seconds")
+  /// Bonus de rapidité activable par quiz, désactivé par défaut (claude.md §6.2) —
+  /// champ absent de la liste du §3, ajouté ici car explicitement requis par la
+  /// règle de scoring.
+  speedBonusEnabled Boolean        @default(false) @map("speed_bonus_enabled")
+  questionCount     Int            @default(0) @map("question_count")
+  publishedAt       DateTime?      @map("published_at")
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+
+  theme     Theme      @relation(fields: [themeId], references: [id], onDelete: Restrict)
+  questions Question[]
+  attempts  Attempt[]
+
+  @@map("quizzes")
+}
+
+model Question {
+  id          String       @id @default(uuid()) @db.Uuid
+  quizId      String       @map("quiz_id") @db.Uuid
+  position    Int
+  type        QuestionType
+  statement   String
+  imageUrl    String?      @map("image_url")
+  points      Int          @default(1)
+  explanation String
+  source      String
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  quiz            Quiz                    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  choices         Choice[]
+  acceptedAnswers AcceptedAnswer[]
+  attemptAnswers  AttemptAnswer[]
+  answerReviews   AnswerReview[]
+  auditLogEntries QuestionAuditLogEntry[]
+
+  @@index([quizId, position])
+  @@map("questions")
+}
+
+/// Journal des modifications sur les questions publiées (claude.md §9) —
+/// table absente du §3, ajoutée ici car explicitement requise par cette
+/// règle du back-office.
+model QuestionAuditLogEntry {
+  id         String   @id @default(uuid()) @db.Uuid
+  questionId String   @map("question_id") @db.Uuid
+  changedBy  String?  @map("changed_by") @db.Uuid
+  action     String
+  changedAt  DateTime @default(now()) @map("changed_at")
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  admin    User?    @relation(fields: [changedBy], references: [id], onDelete: SetNull)
+
+  @@index([questionId])
+  @@map("question_audit_log_entries")
+}
+
+model Choice {
+  id         String  @id @default(uuid()) @db.Uuid
+  questionId String  @map("question_id") @db.Uuid
+  position   Int
+  label      String
+  isCorrect  Boolean @default(false) @map("is_correct")
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("choices")
+}
+
+model AcceptedAnswer {
+  id         String  @id @default(uuid()) @db.Uuid
+  questionId String  @map("question_id") @db.Uuid
+  value      String
+  isPrimary  Boolean @default(false) @map("is_primary")
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("accepted_answers")
+}
+
+/// Contrainte userId XOR guestToken non nul (claude.md §3) : ajoutée en SQL brut
+/// dans la migration, Prisma ne supporte pas les CHECK constraints multi-colonnes
+/// dans le schema.
+model Attempt {
+  id               String    @id @default(uuid()) @db.Uuid
+  quizId           String    @map("quiz_id") @db.Uuid
+  userId           String?   @map("user_id") @db.Uuid
+  guestToken       String?   @map("guest_token") @db.Uuid
+  startedAt        DateTime  @default(now()) @map("started_at")
+  finishedAt       DateTime? @map("finished_at")
+  score            Int       @default(0)
+  maxScore         Int       @map("max_score")
+  durationMs       Int?      @map("duration_ms")
+  countsForRanking Boolean   @default(false) @map("counts_for_ranking")
+
+  quiz    Quiz            @relation(fields: [quizId], references: [id], onDelete: Restrict)
+  user    User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  answers AttemptAnswer[]
+
+  @@index([userId, quizId])
+  @@index([guestToken])
+  @@map("attempts")
+}
+
+model AttemptAnswer {
+  id           String   @id @default(uuid()) @db.Uuid
+  attemptId    String   @map("attempt_id") @db.Uuid
+  questionId   String   @map("question_id") @db.Uuid
+  submittedAt  DateTime @default(now()) @map("submitted_at")
+  rawAnswer    Json     @map("raw_answer")
+  isCorrect    Boolean  @map("is_correct")
+  pointsEarned Int      @default(0) @map("points_earned")
+  answerTimeMs Int      @map("answer_time_ms")
+
+  attempt  Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
+
+  @@unique([attemptId, questionId])
+  @@map("attempt_answers")
+}
+
+model AnswerReview {
+  id            String             @id @default(uuid()) @db.Uuid
+  questionId    String             @map("question_id") @db.Uuid
+  submittedText String             @map("submitted_text")
+  occurrences   Int                @default(1)
+  status        AnswerReviewStatus @default(PENDING)
+  reviewedBy    String?            @map("reviewed_by") @db.Uuid
+  reviewedAt    DateTime?          @map("reviewed_at")
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  reviewer User?    @relation("AnswerReviewReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@map("answer_reviews")
+}
+
+model UserStats {
+  userId           String    @id @map("user_id") @db.Uuid
+  totalScore       Int       @default(0) @map("total_score")
+  quizzesCompleted Int       @default(0) @map("quizzes_completed")
+  correctAnswers   Int       @default(0) @map("correct_answers")
+  totalAnswers     Int       @default(0) @map("total_answers")
+  averageAccuracy  Float     @default(0) @map("average_accuracy")
+  lastPlayedAt     DateTime? @map("last_played_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([totalScore(sort: Desc)])
+  @@map("user_stats")
+}

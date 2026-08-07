@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+dist/
+node_modules/
+coverage/
+claude.md
+apps/api/src/generated/
