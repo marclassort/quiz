@@ -13,6 +13,9 @@
     "type-check": "vue-tsc -b --noEmit"
   },
   "dependencies": {
+    "@fontsource/fraunces": "^5.3.0",
+    "@fontsource/public-sans": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
     "@pinia/colada": "^1.4.2",
     "@quiz/shared": "workspace:*",
     "pinia": "^3.0.4",
