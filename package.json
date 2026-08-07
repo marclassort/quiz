@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "db:migrate": "pnpm --filter @quiz/api db:migrate",
-    "db:seed": "pnpm --filter @quiz/api db:seed"
+    "db:seed": "pnpm --filter @quiz/api db:seed",
+    "geo:import": "pnpm --filter @quiz/api geo:import"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
