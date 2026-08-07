@@ -17,6 +17,6 @@ describe('App', () => {
       },
     });
 
-    expect(wrapper.text()).toContain('Thèmes');
+    expect(wrapper.text()).toContain('Choisissez une destination');
   });
 });

@@ -11,7 +11,10 @@ function pointLeft(index: number): string {
   return `calc(8px + ${ratio(index)} * (100% - 16px))`;
 }
 
-const sailedRatio = computed(() => ratio(props.current - 1));
+// `current` peut valoir 0 (aperçu d'un parcours pas encore commencé sur la
+// fiche de quiz) : hors du domaine [1, total] du ratio, on écrête donc.
+const sailedRatio = computed(() => Math.max(0, ratio(props.current - 1)));
+const ariaValueNow = computed(() => Math.min(Math.max(props.current, 1), props.total));
 </script>
 
 <template>
@@ -20,7 +23,7 @@ const sailedRatio = computed(() => ratio(props.current - 1));
     role="progressbar"
     :aria-valuemin="1"
     :aria-valuemax="total"
-    :aria-valuenow="current"
+    :aria-valuenow="ariaValueNow"
     :aria-valuetext="$t('quizPlay.progress', { current, total })"
   >
     <div class="relative h-6 w-full max-w-xs" aria-hidden="true">
