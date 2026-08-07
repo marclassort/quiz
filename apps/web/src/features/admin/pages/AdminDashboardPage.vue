@@ -18,16 +18,16 @@ const sortedSuccessRates = computed(() =>
 
 <template>
   <section>
-    <h1 class="text-2xl font-bold">{{ $t('admin.dashboard.title') }}</h1>
+    <h1 class="font-display text-2xl font-bold">{{ $t('admin.dashboard.title') }}</h1>
 
     <nav class="mt-4 flex flex-wrap gap-4 text-sm font-medium">
-      <RouterLink :to="{ name: 'admin-themes' }" class="text-blue-700 hover:underline">
+      <RouterLink :to="{ name: 'admin-themes' }" class="text-accent-primary hover:underline">
         {{ $t('admin.nav.themes') }}
       </RouterLink>
-      <RouterLink :to="{ name: 'admin-quizzes' }" class="text-blue-700 hover:underline">
+      <RouterLink :to="{ name: 'admin-quizzes' }" class="text-accent-primary hover:underline">
         {{ $t('admin.nav.quizzes') }}
       </RouterLink>
-      <RouterLink :to="{ name: 'admin-answer-reviews' }" class="text-blue-700 hover:underline">
+      <RouterLink :to="{ name: 'admin-answer-reviews' }" class="text-accent-primary hover:underline">
         {{ $t('admin.nav.answerReviews') }}
       </RouterLink>
     </nav>
@@ -43,31 +43,31 @@ const sortedSuccessRates = computed(() =>
 
     <template v-else-if="stats">
       <dl class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div class="rounded-lg border border-slate-200 p-4">
-          <dt class="text-sm text-slate-500">{{ $t('admin.dashboard.totalAttempts') }}</dt>
-          <dd class="text-2xl font-bold">{{ stats.totalAttempts }}</dd>
+        <div class="rounded-lg border border-hairline p-4">
+          <dt class="text-sm text-ink-muted">{{ $t('admin.dashboard.totalAttempts') }}</dt>
+          <dd class="font-data text-2xl font-bold tabular-nums">{{ stats.totalAttempts }}</dd>
         </div>
-        <div class="rounded-lg border border-slate-200 p-4">
-          <dt class="text-sm text-slate-500">{{ $t('admin.dashboard.finishedAttempts') }}</dt>
-          <dd class="text-2xl font-bold">{{ stats.finishedAttempts }}</dd>
+        <div class="rounded-lg border border-hairline p-4">
+          <dt class="text-sm text-ink-muted">{{ $t('admin.dashboard.finishedAttempts') }}</dt>
+          <dd class="font-data text-2xl font-bold tabular-nums">{{ stats.finishedAttempts }}</dd>
         </div>
-        <div class="rounded-lg border border-slate-200 p-4">
-          <dt class="text-sm text-slate-500">{{ $t('admin.dashboard.totalQuizzes') }}</dt>
-          <dd class="text-2xl font-bold">{{ stats.totalQuizzes }}</dd>
+        <div class="rounded-lg border border-hairline p-4">
+          <dt class="text-sm text-ink-muted">{{ $t('admin.dashboard.totalQuizzes') }}</dt>
+          <dd class="font-data text-2xl font-bold tabular-nums">{{ stats.totalQuizzes }}</dd>
         </div>
-        <div class="rounded-lg border border-slate-200 p-4">
-          <dt class="text-sm text-slate-500">{{ $t('admin.dashboard.totalQuestions') }}</dt>
-          <dd class="text-2xl font-bold">{{ stats.totalQuestions }}</dd>
+        <div class="rounded-lg border border-hairline p-4">
+          <dt class="text-sm text-ink-muted">{{ $t('admin.dashboard.totalQuestions') }}</dt>
+          <dd class="font-data text-2xl font-bold tabular-nums">{{ stats.totalQuestions }}</dd>
         </div>
       </dl>
 
       <h2 class="mt-8 text-lg font-semibold">{{ $t('admin.dashboard.successRatesTitle') }}</h2>
-      <p v-if="sortedSuccessRates.length === 0" class="mt-2 text-slate-600">
+      <p v-if="sortedSuccessRates.length === 0" class="mt-2 text-ink-muted">
         {{ $t('admin.dashboard.noData') }}
       </p>
       <table v-else class="mt-2 w-full text-left text-sm">
         <thead>
-          <tr class="border-b border-slate-200 text-xs uppercase text-slate-500">
+          <tr class="border-b border-hairline text-xs uppercase text-ink-muted">
             <th scope="col" class="py-2 pr-2">{{ $t('admin.dashboard.columns.statement') }}</th>
             <th scope="col" class="py-2 pr-2">{{ $t('admin.dashboard.columns.quiz') }}</th>
             <th scope="col" class="py-2">{{ $t('admin.dashboard.columns.successRate') }}</th>
@@ -77,20 +77,20 @@ const sortedSuccessRates = computed(() =>
           <tr
             v-for="row in sortedSuccessRates"
             :key="row.questionId"
-            class="border-b border-slate-100"
+            class="border-b border-hairline"
           >
             <td class="py-2 pr-2">
               <RouterLink
                 :to="{ name: 'admin-question-editor', params: { id: row.questionId } }"
-                class="text-blue-700 hover:underline"
+                class="text-accent-primary hover:underline"
               >
                 {{ row.statement }}
               </RouterLink>
             </td>
-            <td class="py-2 pr-2 text-slate-600">{{ row.quizSlug }}</td>
-            <td class="py-2">
+            <td class="py-2 pr-2 text-ink-muted">{{ row.quizSlug }}</td>
+            <td class="py-2 font-data tabular-nums">
               {{ accuracyLabel(row.successRate) }}
-              <span class="text-xs text-slate-500"
+              <span class="text-xs text-ink-muted"
                 >({{ row.correctAnswers }}/{{ row.totalAnswers }})</span
               >
             </td>

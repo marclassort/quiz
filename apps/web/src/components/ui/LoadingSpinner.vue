@@ -3,7 +3,7 @@ withDefaults(defineProps<{ label?: string }>(), { label: 'Chargement…' });
 </script>
 
 <template>
-  <div class="flex items-center gap-2 text-slate-600" role="status">
+  <div class="flex items-center gap-2 text-ink-muted" role="status">
     <svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
       <path

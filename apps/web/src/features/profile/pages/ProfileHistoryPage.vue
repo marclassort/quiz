@@ -20,7 +20,7 @@ function formatDate(iso: string): string {
 
 <template>
   <section class="mx-auto max-w-2xl">
-    <h1 class="text-2xl font-bold">{{ $t('profileHistory.title') }}</h1>
+    <h1 class="font-display text-2xl font-bold">{{ $t('profileHistory.title') }}</h1>
 
     <LoadingSpinner
       v-if="status === 'pending'"
@@ -32,7 +32,7 @@ function formatDate(iso: string): string {
     </BaseAlert>
 
     <template v-else-if="attemptsPage">
-      <p v-if="attemptsPage.items.length === 0" class="mt-4 text-slate-600">
+      <p v-if="attemptsPage.items.length === 0" class="mt-4 text-ink-muted">
         {{ $t('profileHistory.empty') }}
       </p>
 
@@ -40,22 +40,25 @@ function formatDate(iso: string): string {
         <li
           v-for="attempt in attemptsPage.items"
           :key="attempt.id"
-          class="rounded-lg border border-slate-200 p-4"
+          class="rounded-lg border border-hairline p-4"
         >
           <div class="flex flex-wrap items-center justify-between gap-2">
             <RouterLink
               :to="{ name: 'quiz-detail', params: { slug: attempt.quizSlug } }"
-              class="font-semibold text-blue-700 hover:underline"
+              class="font-semibold text-accent-primary hover:underline"
             >
               {{ attempt.quizTitle }}
             </RouterLink>
-            <span class="text-sm font-medium text-slate-700">
+            <span class="font-data text-sm font-medium tabular-nums text-ink">
               {{ attempt.score }} / {{ attempt.maxScore }}
             </span>
           </div>
-          <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+          <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-ink-muted">
             <span>{{ formatDate(attempt.startedAt) }}</span>
-            <span v-if="!attempt.countsForRanking" class="rounded-full bg-slate-100 px-2 py-0.5">
+            <span
+              v-if="!attempt.countsForRanking"
+              class="rounded-full bg-accent-secondary/10 px-2 py-0.5 text-accent-secondary-strong"
+            >
               {{ $t('profileHistory.trainingMode') }}
             </span>
           </div>

@@ -92,7 +92,7 @@ async function onImportFileChange(event: Event) {
 <template>
   <section>
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold">{{ $t('admin.quizzes.title') }}</h1>
+      <h1 class="font-display text-2xl font-bold">{{ $t('admin.quizzes.title') }}</h1>
       <div class="flex gap-2">
         <BaseButton type="button" variant="secondary" @click="fileInput?.click()">
           {{ isImporting ? $t('admin.quizzes.importing') : $t('admin.quizzes.import') }}
@@ -116,15 +116,15 @@ async function onImportFileChange(event: Event) {
 
     <form
       v-if="showCreateForm"
-      class="mt-4 space-y-3 rounded-lg border border-slate-200 p-4"
+      class="mt-4 space-y-3 rounded-lg border border-hairline p-4"
       novalidate
       @submit.prevent="onCreateSubmit"
     >
-      <label class="block text-sm text-slate-700">
+      <label class="block text-sm text-ink-muted">
         {{ $t('admin.quizzes.fields.theme') }}
         <select
           v-model="createForm.themeSlug"
-          class="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+          class="mt-1 block w-full rounded-sm border-0 px-3 py-2 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
         >
           <option value="" disabled>{{ $t('admin.quizzes.fields.themePlaceholder') }}</option>
           <option v-for="theme in themes" :key="theme.id" :value="theme.slug">
@@ -135,11 +135,11 @@ async function onImportFileChange(event: Event) {
       <BaseInput v-model="createForm.slug" :label="$t('admin.quizzes.fields.slug')" />
       <BaseInput v-model="createForm.title" :label="$t('admin.quizzes.fields.title')" />
       <BaseInput v-model="createForm.description" :label="$t('admin.quizzes.fields.description')" />
-      <label class="block text-sm text-slate-700">
+      <label class="block text-sm text-ink-muted">
         {{ $t('admin.quizzes.fields.difficulty') }}
         <select
           v-model="createForm.difficulty"
-          class="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+          class="mt-1 block w-full rounded-sm border-0 px-3 py-2 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
         >
           <option value="EASY">{{ $t('quiz.difficulty.EASY') }}</option>
           <option value="MEDIUM">{{ $t('quiz.difficulty.MEDIUM') }}</option>
@@ -158,11 +158,11 @@ async function onImportFileChange(event: Event) {
     </form>
 
     <div class="mt-6 flex flex-wrap gap-3">
-      <label class="text-sm text-slate-700">
+      <label class="text-sm text-ink-muted">
         {{ $t('admin.quizzes.filters.theme') }}
         <select
           v-model="themeFilter"
-          class="ml-2 rounded-md border-0 px-2 py-1 text-sm ring-1 ring-inset ring-slate-300"
+          class="ml-2 rounded-sm border-0 px-2 py-1 text-sm ring-1 ring-inset ring-hairline"
         >
           <option value="">{{ $t('admin.quizzes.filters.all') }}</option>
           <option v-for="theme in themes" :key="theme.id" :value="theme.slug">
@@ -170,11 +170,11 @@ async function onImportFileChange(event: Event) {
           </option>
         </select>
       </label>
-      <label class="text-sm text-slate-700">
+      <label class="text-sm text-ink-muted">
         {{ $t('admin.quizzes.filters.status') }}
         <select
           v-model="statusFilter"
-          class="ml-2 rounded-md border-0 px-2 py-1 text-sm ring-1 ring-inset ring-slate-300"
+          class="ml-2 rounded-sm border-0 px-2 py-1 text-sm ring-1 ring-inset ring-hairline"
         >
           <option value="">{{ $t('admin.quizzes.filters.all') }}</option>
           <option value="DRAFT">{{ $t('admin.quizzes.status.DRAFT') }}</option>
@@ -182,11 +182,11 @@ async function onImportFileChange(event: Event) {
           <option value="ARCHIVED">{{ $t('admin.quizzes.status.ARCHIVED') }}</option>
         </select>
       </label>
-      <label class="text-sm text-slate-700">
+      <label class="text-sm text-ink-muted">
         {{ $t('admin.quizzes.filters.difficulty') }}
         <select
           v-model="difficultyFilter"
-          class="ml-2 rounded-md border-0 px-2 py-1 text-sm ring-1 ring-inset ring-slate-300"
+          class="ml-2 rounded-sm border-0 px-2 py-1 text-sm ring-1 ring-inset ring-hairline"
         >
           <option value="">{{ $t('admin.quizzes.filters.all') }}</option>
           <option value="EASY">{{ $t('quiz.difficulty.EASY') }}</option>
@@ -202,18 +202,18 @@ async function onImportFileChange(event: Event) {
     </BaseAlert>
 
     <template v-else-if="quizzesPage">
-      <p v-if="quizzesPage.items.length === 0" class="mt-6 text-slate-600">
+      <p v-if="quizzesPage.items.length === 0" class="mt-6 text-ink-muted">
         {{ $t('admin.quizzes.empty') }}
       </p>
       <ul v-else class="mt-6 space-y-2">
         <li v-for="quiz in quizzesPage.items" :key="quiz.id">
           <RouterLink
             :to="{ name: 'admin-quiz-editor', params: { id: quiz.id } }"
-            class="flex items-center justify-between gap-4 rounded-lg border border-slate-200 p-4 hover:border-blue-400"
+            class="flex items-center justify-between gap-4 rounded-lg border border-hairline p-4 hover:border-accent-primary"
           >
             <div>
               <p class="font-semibold">{{ quiz.title }}</p>
-              <p class="text-xs text-slate-500">
+              <p class="text-xs text-ink-muted">
                 {{ quiz.theme.name }} · {{ $t(`quiz.difficulty.${quiz.difficulty}`) }} ·
                 {{ quiz.questionCount }} questions
               </p>
@@ -221,9 +221,9 @@ async function onImportFileChange(event: Event) {
             <span
               class="rounded-full px-2 py-0.5 text-xs font-medium"
               :class="{
-                'bg-slate-100 text-slate-700': quiz.status === 'DRAFT',
-                'bg-green-100 text-green-800': quiz.status === 'PUBLISHED',
-                'bg-amber-100 text-amber-800': quiz.status === 'ARCHIVED',
+                'bg-ink/10 text-ink-muted': quiz.status === 'DRAFT',
+                'bg-success/10 text-success-strong': quiz.status === 'PUBLISHED',
+                'bg-accent-secondary/10 text-accent-secondary-strong': quiz.status === 'ARCHIVED',
               }"
             >
               {{ $t(`admin.quizzes.status.${quiz.status}`) }}
