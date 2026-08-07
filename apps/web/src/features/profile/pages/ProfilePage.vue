@@ -94,7 +94,7 @@ async function onDeleteConfirmed() {
 
 <template>
   <section class="mx-auto max-w-xl">
-    <h1 class="text-2xl font-bold">{{ $t('profile.title') }}</h1>
+    <h1 class="font-display text-2xl font-bold">{{ $t('profile.title') }}</h1>
 
     <LoadingSpinner v-if="meStatus === 'pending'" :label="$t('profile.loading')" />
     <BaseAlert v-else-if="meStatus === 'error'" variant="error" role="alert">
@@ -102,31 +102,31 @@ async function onDeleteConfirmed() {
     </BaseAlert>
 
     <template v-else-if="me">
-      <p class="mt-1 text-sm text-slate-600">{{ me.email }}</p>
+      <p class="mt-1 text-sm text-ink-muted">{{ me.email }}</p>
 
       <div class="mt-6">
         <h2 class="text-lg font-semibold">{{ $t('profile.statsTitle') }}</h2>
         <LoadingSpinner v-if="statsStatus === 'pending'" :label="$t('profile.loading')" />
         <dl
           v-else-if="stats"
-          class="mt-2 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-slate-600 sm:grid-cols-3"
+          class="mt-2 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-ink-muted sm:grid-cols-3"
         >
           <div>
             <dt class="font-medium">{{ $t('profile.stats.totalScore') }}</dt>
-            <dd>{{ stats.totalScore }}</dd>
+            <dd class="font-data tabular-nums">{{ stats.totalScore }}</dd>
           </div>
           <div>
             <dt class="font-medium">{{ $t('profile.stats.quizzesCompleted') }}</dt>
-            <dd>{{ stats.quizzesCompleted }}</dd>
+            <dd class="font-data tabular-nums">{{ stats.quizzesCompleted }}</dd>
           </div>
           <div>
             <dt class="font-medium">{{ $t('profile.stats.accuracy') }}</dt>
-            <dd>{{ accuracyLabel(stats.averageAccuracy) }}</dd>
+            <dd class="font-data tabular-nums">{{ accuracyLabel(stats.averageAccuracy) }}</dd>
           </div>
         </dl>
         <RouterLink
           :to="{ name: 'profile-history' }"
-          class="mt-3 inline-block text-sm font-medium text-blue-700 hover:underline"
+          class="mt-3 inline-block text-sm font-medium text-accent-primary hover:underline"
         >
           {{ $t('profile.viewHistory') }}
         </RouterLink>
@@ -141,11 +141,11 @@ async function onDeleteConfirmed() {
           autocomplete="nickname"
         />
 
-        <label class="flex items-start gap-2 text-sm text-slate-700">
+        <label class="flex items-start gap-2 text-sm text-ink-muted">
           <input
             v-model="excludedFromLeaderboard"
             type="checkbox"
-            class="mt-0.5 h-4 w-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600"
+            class="mt-0.5 h-4 w-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-primary"
           />
           <span>{{ $t('profile.excludeFromLeaderboard') }}</span>
         </label>
@@ -162,9 +162,9 @@ async function onDeleteConfirmed() {
         </BaseButton>
       </form>
 
-      <div class="mt-8 border-t border-slate-200 pt-6">
+      <div class="mt-8 border-t border-hairline pt-6">
         <h2 class="text-lg font-semibold">{{ $t('profile.dataTitle') }}</h2>
-        <p class="mt-1 text-sm text-slate-600">{{ $t('profile.exportDescription') }}</p>
+        <p class="mt-1 text-sm text-ink-muted">{{ $t('profile.exportDescription') }}</p>
         <BaseAlert v-if="exportError" variant="error" role="alert" class="mt-2" aria-live="polite">
           {{ exportError }}
         </BaseAlert>
@@ -179,9 +179,9 @@ async function onDeleteConfirmed() {
         </BaseButton>
       </div>
 
-      <div class="mt-8 border-t border-slate-200 pt-6">
-        <h2 class="text-lg font-semibold text-red-700">{{ $t('profile.dangerZoneTitle') }}</h2>
-        <p class="mt-1 text-sm text-slate-600">{{ $t('profile.deleteDescription') }}</p>
+      <div class="mt-8 border-t border-hairline pt-6">
+        <h2 class="text-lg font-semibold text-error">{{ $t('profile.dangerZoneTitle') }}</h2>
+        <p class="mt-1 text-sm text-ink-muted">{{ $t('profile.deleteDescription') }}</p>
         <BaseAlert v-if="deleteError" variant="error" role="alert" class="mt-2" aria-live="polite">
           {{ deleteError }}
         </BaseAlert>

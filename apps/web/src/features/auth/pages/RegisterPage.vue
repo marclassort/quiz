@@ -45,8 +45,8 @@ async function onSubmit() {
 
 <template>
   <section class="mx-auto max-w-sm">
-    <h1 class="text-2xl font-bold">{{ $t('auth.register.title') }}</h1>
-    <p class="mt-2 text-sm text-slate-600">
+    <h1 class="font-display text-2xl font-bold">{{ $t('auth.register.title') }}</h1>
+    <p class="mt-2 text-sm text-ink-muted">
       {{ $t('auth.register.subtitle') }}
     </p>
 
@@ -78,9 +78,9 @@ async function onSubmit() {
       </BaseButton>
     </form>
 
-    <p class="mt-4 text-sm text-slate-600">
+    <p class="mt-4 text-sm text-ink-muted">
       {{ $t('auth.register.hasAccount') }}
-      <RouterLink :to="{ name: 'login' }" class="font-medium text-blue-700 hover:underline">
+      <RouterLink :to="{ name: 'login' }" class="font-medium text-accent-primary hover:underline">
         {{ $t('auth.register.loginLink') }}
       </RouterLink>
     </p>

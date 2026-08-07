@@ -209,23 +209,23 @@ function formatDate(iso: string): string {
     </BaseAlert>
 
     <template v-else-if="question">
-      <h1 class="text-2xl font-bold">{{ $t('admin.questions.editTitle') }}</h1>
-      <p class="mt-1 text-sm text-slate-500">
+      <h1 class="font-display text-2xl font-bold">{{ $t('admin.questions.editTitle') }}</h1>
+      <p class="mt-1 text-sm text-ink-muted">
         {{ question.quiz.title }} ·
         {{ $t('admin.questions.successRate', { rate: Math.round(question.successRate * 100) }) }}
         ({{ question.correctAnswers }}/{{ question.totalAnswers }})
       </p>
 
       <form
-        class="mt-6 space-y-3 rounded-lg border border-slate-200 p-4"
+        class="mt-6 space-y-3 rounded-lg border border-hairline p-4"
         novalidate
         @submit.prevent="onSaveQuestion"
       >
-        <label class="block text-sm text-slate-700">
+        <label class="block text-sm text-ink-muted">
           {{ $t('admin.questions.fields.type') }}
           <select
             v-model="form.type"
-            class="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+            class="mt-1 block w-full rounded-sm border-0 px-3 py-2 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
           >
             <option value="SINGLE_CHOICE">{{ $t('admin.questions.type.SINGLE_CHOICE') }}</option>
             <option value="MULTIPLE_CHOICE">
@@ -261,7 +261,7 @@ function formatDate(iso: string): string {
           <li
             v-for="(choice, index) in question.choices"
             :key="choice.id"
-            class="flex items-center gap-2 rounded-lg border border-slate-200 p-3"
+            class="flex items-center gap-2 rounded-lg border border-hairline p-3"
           >
             <label class="flex flex-1 items-center gap-2 text-sm">
               <input
@@ -274,7 +274,7 @@ function formatDate(iso: string): string {
               />
               <input
                 :value="choice.label"
-                class="flex-1 rounded-md border-0 px-2 py-1 text-sm ring-1 ring-inset ring-slate-300"
+                class="flex-1 rounded-sm border-0 px-2 py-1 text-sm ring-1 ring-inset ring-hairline"
                 @change="onRenameChoice(choice.id, ($event.target as HTMLInputElement).value)"
               />
             </label>
@@ -307,7 +307,7 @@ function formatDate(iso: string): string {
             v-model="newChoice.label"
             :label="$t('admin.questions.fields.newChoiceLabel')"
           />
-          <label class="flex items-center gap-2 pb-2 text-sm text-slate-700">
+          <label class="flex items-center gap-2 pb-2 text-sm text-ink-muted">
             <input v-model="newChoice.isCorrect" type="checkbox" class="h-4 w-4" />
             {{ $t('admin.questions.fields.isCorrect') }}
           </label>
@@ -331,16 +331,16 @@ function formatDate(iso: string): string {
           <li
             v-for="answer in acceptedAnswers"
             :key="answer.id"
-            class="flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-sm"
+            class="flex items-center gap-3 rounded-lg border border-hairline p-3 text-sm"
           >
             <div class="flex-1">
               <p class="font-medium">{{ answer.value }}</p>
-              <p class="text-xs text-slate-500">
+              <p class="text-xs text-ink-muted">
                 {{ $t('admin.questions.normalizedPreview') }} :
-                <code class="rounded bg-slate-100 px-1">{{ answer.normalizedValue }}</code>
+                <code class="rounded bg-surface px-1">{{ answer.normalizedValue }}</code>
               </p>
             </div>
-            <label class="flex items-center gap-1 text-xs text-slate-600">
+            <label class="flex items-center gap-1 text-xs text-ink-muted">
               <input
                 type="checkbox"
                 :checked="answer.isPrimary"
@@ -364,7 +364,7 @@ function formatDate(iso: string): string {
             v-model="newAnswer.value"
             :label="$t('admin.questions.fields.newAnswerValue')"
           />
-          <label class="flex items-center gap-2 pb-2 text-sm text-slate-700">
+          <label class="flex items-center gap-2 pb-2 text-sm text-ink-muted">
             <input v-model="newAnswer.isPrimary" type="checkbox" class="h-4 w-4" />
             {{ $t('admin.questions.fields.isPrimary') }}
           </label>
@@ -375,10 +375,10 @@ function formatDate(iso: string): string {
       </template>
 
       <h2 class="mt-8 text-lg font-semibold">{{ $t('admin.questions.auditLogTitle') }}</h2>
-      <p v-if="!auditLog || auditLog.length === 0" class="mt-2 text-sm text-slate-600">
+      <p v-if="!auditLog || auditLog.length === 0" class="mt-2 text-sm text-ink-muted">
         {{ $t('admin.questions.noAuditLog') }}
       </p>
-      <ul v-else class="mt-2 space-y-1 text-sm text-slate-600">
+      <ul v-else class="mt-2 space-y-1 text-sm text-ink-muted">
         <li v-for="entry in auditLog" :key="entry.id">
           {{ formatDate(entry.changedAt) }} —
           {{ $t(`admin.questions.auditAction.${entry.action}`) }}

@@ -6,7 +6,7 @@ const emit = defineEmits<{ 'update:page': [page: number] }>();
 </script>
 
 <template>
-  <nav class="flex items-center gap-3 text-sm text-slate-600" :aria-label="$t('pagination.label')">
+  <nav class="flex items-center gap-3 text-sm text-ink-muted" :aria-label="$t('pagination.label')">
     <BaseButton
       type="button"
       variant="secondary"

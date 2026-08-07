@@ -193,13 +193,13 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
 
     <template v-else-if="quiz">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold">{{ quiz.title }}</h1>
+        <h1 class="font-display text-2xl font-bold">{{ quiz.title }}</h1>
         <span
           class="rounded-full px-2 py-0.5 text-xs font-medium"
           :class="{
-            'bg-slate-100 text-slate-700': quiz.status === 'DRAFT',
-            'bg-green-100 text-green-800': quiz.status === 'PUBLISHED',
-            'bg-amber-100 text-amber-800': quiz.status === 'ARCHIVED',
+            'bg-ink/10 text-ink-muted': quiz.status === 'DRAFT',
+            'bg-success/10 text-success-strong': quiz.status === 'PUBLISHED',
+            'bg-accent-secondary/10 text-accent-secondary-strong': quiz.status === 'ARCHIVED',
           }"
         >
           {{ $t(`admin.quizzes.status.${quiz.status}`) }}
@@ -240,16 +240,16 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
       </BaseAlert>
 
       <form
-        class="mt-6 space-y-3 rounded-lg border border-slate-200 p-4"
+        class="mt-6 space-y-3 rounded-lg border border-hairline p-4"
         novalidate
         @submit.prevent="onSaveQuiz"
       >
         <h2 class="font-semibold">{{ $t('admin.quizzes.editTitle') }}</h2>
-        <label class="block text-sm text-slate-700">
+        <label class="block text-sm text-ink-muted">
           {{ $t('admin.quizzes.fields.theme') }}
           <select
             v-model="form.themeSlug"
-            class="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+            class="mt-1 block w-full rounded-sm border-0 px-3 py-2 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
           >
             <option v-for="theme in themes" :key="theme.id" :value="theme.slug">
               {{ theme.name }}
@@ -259,11 +259,11 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
         <BaseInput v-model="form.slug" :label="$t('admin.quizzes.fields.slug')" />
         <BaseInput v-model="form.title" :label="$t('admin.quizzes.fields.title')" />
         <BaseInput v-model="form.description" :label="$t('admin.quizzes.fields.description')" />
-        <label class="block text-sm text-slate-700">
+        <label class="block text-sm text-ink-muted">
           {{ $t('admin.quizzes.fields.difficulty') }}
           <select
             v-model="form.difficulty"
-            class="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+            class="mt-1 block w-full rounded-sm border-0 px-3 py-2 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
           >
             <option value="EASY">{{ $t('quiz.difficulty.EASY') }}</option>
             <option value="MEDIUM">{{ $t('quiz.difficulty.MEDIUM') }}</option>
@@ -275,7 +275,7 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
           type="number"
           :label="$t('admin.quizzes.fields.timeLimitSeconds')"
         />
-        <label class="flex items-center gap-2 text-sm text-slate-700">
+        <label class="flex items-center gap-2 text-sm text-ink-muted">
           <input v-model="form.speedBonusEnabled" type="checkbox" class="h-4 w-4" />
           {{ $t('admin.quizzes.fields.speedBonusEnabled') }}
         </label>
@@ -297,15 +297,15 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
 
       <form
         v-if="showAddQuestion"
-        class="mt-3 space-y-3 rounded-lg border border-slate-200 p-4"
+        class="mt-3 space-y-3 rounded-lg border border-hairline p-4"
         novalidate
         @submit.prevent="onAddQuestion"
       >
-        <label class="block text-sm text-slate-700">
+        <label class="block text-sm text-ink-muted">
           {{ $t('admin.questions.fields.type') }}
           <select
             v-model="newQuestion.type"
-            class="mt-1 block w-full rounded-md border-0 px-3 py-2 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+            class="mt-1 block w-full rounded-sm border-0 px-3 py-2 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
           >
             <option value="SINGLE_CHOICE">{{ $t('admin.questions.type.SINGLE_CHOICE') }}</option>
             <option value="MULTIPLE_CHOICE">
@@ -342,7 +342,7 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
         :label="$t('admin.quizzes.loading')"
         class="mt-4"
       />
-      <p v-else-if="questionsPage?.items.length === 0" class="mt-4 text-slate-600">
+      <p v-else-if="questionsPage?.items.length === 0" class="mt-4 text-ink-muted">
         {{ $t('admin.quizzes.noQuestions') }}
       </p>
       <ul v-else-if="questionsPage" class="mt-4 space-y-2">
@@ -351,9 +351,9 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
           :key="question.id"
           class="flex items-center justify-between gap-4 rounded-lg border p-3"
           :class="{
-            'border-red-300 bg-red-50':
+            'border-error/30 bg-error/10':
               missingSourceIds.includes(question.id) || missingExplanationIds.includes(question.id),
-            'border-slate-200': !(
+            'border-hairline': !(
               missingSourceIds.includes(question.id) || missingExplanationIds.includes(question.id)
             ),
           }"
@@ -361,16 +361,16 @@ const isPublished = computed(() => quiz.value?.status === 'PUBLISHED');
           <div>
             <RouterLink
               :to="{ name: 'admin-question-editor', params: { id: question.id } }"
-              class="font-medium text-blue-700 hover:underline"
+              class="font-medium text-accent-primary hover:underline"
             >
               {{ question.position }}. {{ question.statement }}
             </RouterLink>
-            <p class="mt-1 text-xs text-slate-500">
+            <p class="mt-1 text-xs text-ink-muted">
               {{ $t(`admin.questions.type.${question.type}`) }} · {{ question.points }} pt
-              <span v-if="!question.source" class="ml-1 font-medium text-red-700">
+              <span v-if="!question.source" class="ml-1 font-medium text-error">
                 · {{ $t('admin.questions.missingSource') }}
               </span>
-              <span v-if="!question.explanation" class="ml-1 font-medium text-red-700">
+              <span v-if="!question.explanation" class="ml-1 font-medium text-error">
                 · {{ $t('admin.questions.missingExplanation') }}
               </span>
             </p>

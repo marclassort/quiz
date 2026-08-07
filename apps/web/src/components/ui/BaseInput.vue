@@ -35,7 +35,7 @@ function onInput(event: Event) {
 
 <template>
   <div>
-    <label :for="inputId" class="mb-1 block text-sm font-medium text-slate-700">{{ label }}</label>
+    <label :for="inputId" class="mb-1 block text-sm font-medium text-ink-muted">{{ label }}</label>
     <input
       :id="inputId"
       :type="type"
@@ -44,9 +44,9 @@ function onInput(event: Event) {
       :maxlength="maxlength"
       :aria-invalid="error ? 'true' : undefined"
       :aria-describedby="errorId"
-      class="block w-full rounded-md border-0 px-3 py-2 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-blue-600"
+      class="block w-full rounded-sm border-0 bg-surface px-3 py-2 text-ink ring-1 ring-inset ring-hairline placeholder:text-ink-muted focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-accent-primary"
       @input="onInput"
     />
-    <p v-if="error" :id="errorId" class="mt-1 text-sm text-red-700">{{ error }}</p>
+    <p v-if="error" :id="errorId" class="mt-1 text-sm text-error">{{ error }}</p>
   </div>
 </template>

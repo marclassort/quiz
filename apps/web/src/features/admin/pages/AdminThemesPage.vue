@@ -100,7 +100,7 @@ const isSaving = computed(() => isCreating.value || isUpdating.value);
 <template>
   <section>
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold">{{ $t('admin.themes.title') }}</h1>
+      <h1 class="font-display text-2xl font-bold">{{ $t('admin.themes.title') }}</h1>
       <BaseButton v-if="!showCreateForm" type="button" @click="startCreate">
         {{ $t('admin.themes.create') }}
       </BaseButton>
@@ -112,7 +112,7 @@ const isSaving = computed(() => isCreating.value || isUpdating.value);
 
     <form
       v-if="showCreateForm"
-      class="mt-4 space-y-3 rounded-lg border border-slate-200 p-4"
+      class="mt-4 space-y-3 rounded-lg border border-hairline p-4"
       novalidate
       @submit.prevent="onSubmit"
     >
@@ -141,7 +141,7 @@ const isSaving = computed(() => isCreating.value || isUpdating.value);
     </BaseAlert>
 
     <ul v-else-if="themes" class="mt-6 space-y-3">
-      <li v-for="theme in themes" :key="theme.id" class="rounded-lg border border-slate-200 p-4">
+      <li v-for="theme in themes" :key="theme.id" class="rounded-lg border border-hairline p-4">
         <template v-if="editingId === theme.id">
           <form class="space-y-3" novalidate @submit.prevent="onSubmit">
             <BaseInput v-model="form.slug" :label="$t('admin.themes.fields.slug')" />
@@ -169,8 +169,8 @@ const isSaving = computed(() => isCreating.value || isUpdating.value);
           <div class="flex items-start justify-between gap-4">
             <div>
               <h2 class="font-semibold">{{ theme.name }}</h2>
-              <p class="text-sm text-slate-600">{{ theme.description }}</p>
-              <p class="mt-1 text-xs text-slate-500">{{ theme.slug }} · #{{ theme.position }}</p>
+              <p class="text-sm text-ink-muted">{{ theme.description }}</p>
+              <p class="mt-1 text-xs text-ink-muted">{{ theme.slug }} · #{{ theme.position }}</p>
             </div>
             <div class="flex flex-none gap-2">
               <BaseButton type="button" variant="secondary" @click="startEdit(theme)">

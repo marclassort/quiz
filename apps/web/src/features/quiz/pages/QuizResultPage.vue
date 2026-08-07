@@ -51,23 +51,23 @@ const durationLabel = computed(() => {
     </BaseAlert>
 
     <template v-else-if="result">
-      <h1 class="text-2xl font-bold">{{ $t('quizResult.title') }}</h1>
+      <h1 class="font-display text-2xl font-bold">{{ $t('quizResult.title') }}</h1>
 
-      <p class="mt-4 text-4xl font-bold text-blue-700">
+      <p class="mt-4 font-data text-4xl font-bold tabular-nums text-accent-primary">
         {{ result.score }} / {{ result.maxScore }}
-        <span v-if="accuracyLabel" class="text-lg font-medium text-slate-500"
+        <span v-if="accuracyLabel" class="text-lg font-medium text-ink-muted"
           >({{ accuracyLabel }})</span
         >
       </p>
 
-      <dl class="mt-4 space-y-1 text-sm text-slate-600">
+      <dl class="mt-4 space-y-1 text-sm text-ink-muted">
         <div class="flex gap-1">
           <dt class="font-medium">{{ $t('quizResult.correctAnswers') }}</dt>
-          <dd>{{ result.correctAnswers }} / {{ result.totalAnswers }}</dd>
+          <dd class="font-data tabular-nums">{{ result.correctAnswers }} / {{ result.totalAnswers }}</dd>
         </div>
         <div v-if="durationLabel" class="flex gap-1">
           <dt class="font-medium">{{ $t('quizResult.duration') }}</dt>
-          <dd>{{ durationLabel }}</dd>
+          <dd class="font-data tabular-nums">{{ durationLabel }}</dd>
         </div>
       </dl>
 

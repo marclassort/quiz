@@ -13,34 +13,34 @@ const { mutate: logout } = useLogoutMutation();
 <template>
   <a
     href="#main-content"
-    class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:shadow"
+    class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:bg-surface focus:px-4 focus:py-2 focus:shadow-1"
   >
     {{ $t('nav.skipToContent') }}
   </a>
 
-  <header class="border-b border-slate-200">
+  <header class="border-b border-hairline">
     <nav
       class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-4 py-3"
       aria-label="Navigation principale"
     >
-      <RouterLink :to="{ name: 'home' }" class="text-lg font-bold text-slate-900">
+      <RouterLink :to="{ name: 'home' }" class="font-display text-lg font-bold text-ink">
         {{ $t('app.title') }}
       </RouterLink>
 
-      <ul class="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-700">
+      <ul class="flex flex-wrap items-center gap-4 text-sm font-medium text-ink-muted">
         <li>
-          <RouterLink :to="{ name: 'leaderboard' }" class="hover:text-blue-700">{{
+          <RouterLink :to="{ name: 'leaderboard' }" class="hover:text-accent-primary">{{
             $t('nav.leaderboard')
           }}</RouterLink>
         </li>
         <template v-if="authStore.isAuthenticated">
           <li v-if="authStore.isAdmin">
-            <RouterLink :to="{ name: 'admin' }" class="hover:text-blue-700">{{
+            <RouterLink :to="{ name: 'admin' }" class="hover:text-accent-primary">{{
               $t('nav.admin')
             }}</RouterLink>
           </li>
           <li>
-            <RouterLink :to="{ name: 'profile' }" class="hover:text-blue-700">{{
+            <RouterLink :to="{ name: 'profile' }" class="hover:text-accent-primary">{{
               $t('nav.profile')
             }}</RouterLink>
           </li>
@@ -50,7 +50,7 @@ const { mutate: logout } = useLogoutMutation();
         </template>
         <template v-else>
           <li>
-            <RouterLink :to="{ name: 'login' }" class="hover:text-blue-700">{{
+            <RouterLink :to="{ name: 'login' }" class="hover:text-accent-primary">{{
               $t('nav.login')
             }}</RouterLink>
           </li>
@@ -68,15 +68,15 @@ const { mutate: logout } = useLogoutMutation();
     <RouterView />
   </main>
 
-  <footer class="border-t border-slate-200">
-    <div class="mx-auto flex max-w-4xl flex-wrap gap-4 px-4 py-6 text-sm text-slate-500">
-      <RouterLink :to="{ name: 'legal-notice' }" class="hover:text-blue-700">{{
+  <footer class="border-t border-hairline">
+    <div class="mx-auto flex max-w-4xl flex-wrap gap-4 px-4 py-6 text-sm text-ink-muted">
+      <RouterLink :to="{ name: 'legal-notice' }" class="hover:text-accent-primary">{{
         $t('footer.legalNotice')
       }}</RouterLink>
-      <RouterLink :to="{ name: 'privacy-policy' }" class="hover:text-blue-700">{{
+      <RouterLink :to="{ name: 'privacy-policy' }" class="hover:text-accent-primary">{{
         $t('footer.privacyPolicy')
       }}</RouterLink>
-      <RouterLink :to="{ name: 'contact' }" class="hover:text-blue-700">{{
+      <RouterLink :to="{ name: 'contact' }" class="hover:text-accent-primary">{{
         $t('footer.contact')
       }}</RouterLink>
     </div>

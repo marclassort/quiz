@@ -44,10 +44,10 @@ const timeLimitLabel = computed(() => {
     </BaseAlert>
 
     <template v-else-if="quiz">
-      <h1 class="text-2xl font-bold">{{ quiz.title }}</h1>
-      <p class="mt-2 text-slate-600">{{ quiz.description }}</p>
+      <h1 class="font-display text-2xl font-bold">{{ quiz.title }}</h1>
+      <p class="mt-2 text-ink-muted">{{ quiz.description }}</p>
 
-      <dl class="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-600">
+      <dl class="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-ink-muted">
         <div class="flex gap-1">
           <dt class="font-medium">{{ $t('quizDetail.difficultyLabel') }}</dt>
           <dd>{{ $t(`quiz.difficulty.${quiz.difficulty}`) }}</dd>

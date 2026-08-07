@@ -49,13 +49,13 @@ async function onReject(id: string) {
 
 <template>
   <section class="mx-auto max-w-2xl">
-    <h1 class="text-2xl font-bold">{{ $t('admin.answerReviews.title') }}</h1>
+    <h1 class="font-display text-2xl font-bold">{{ $t('admin.answerReviews.title') }}</h1>
 
-    <label class="mt-4 block text-sm text-slate-700">
+    <label class="mt-4 block text-sm text-ink-muted">
       {{ $t('admin.answerReviews.filterLabel') }}
       <select
         v-model="statusFilter"
-        class="ml-2 rounded-md border-0 px-2 py-1 text-sm ring-1 ring-inset ring-slate-300"
+        class="ml-2 rounded-sm border-0 px-2 py-1 text-sm ring-1 ring-inset ring-hairline"
       >
         <option value="PENDING">{{ $t('admin.answerReviews.status.PENDING') }}</option>
         <option value="ACCEPTED">{{ $t('admin.answerReviews.status.ACCEPTED') }}</option>
@@ -77,18 +77,18 @@ async function onReject(id: string) {
     </BaseAlert>
 
     <template v-else-if="reviewsPage">
-      <p v-if="reviewsPage.items.length === 0" class="mt-6 text-slate-600">
+      <p v-if="reviewsPage.items.length === 0" class="mt-6 text-ink-muted">
         {{ $t('admin.answerReviews.empty') }}
       </p>
       <ul v-else class="mt-6 space-y-3">
         <li
           v-for="review in reviewsPage.items"
           :key="review.id"
-          class="rounded-lg border border-slate-200 p-4"
+          class="rounded-lg border border-hairline p-4"
         >
           <p class="font-semibold">« {{ review.submittedText }} »</p>
-          <p class="mt-1 text-sm text-slate-600">{{ review.question.statement }}</p>
-          <p class="text-xs text-slate-500">
+          <p class="mt-1 text-sm text-ink-muted">{{ review.question.statement }}</p>
+          <p class="text-xs text-ink-muted">
             {{ review.question.quiz.title }} ·
             {{ $t('admin.answerReviews.occurrences', { count: review.occurrences }) }}
           </p>

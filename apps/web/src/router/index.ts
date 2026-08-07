@@ -120,6 +120,15 @@ const routes = [
     name: 'contact',
     component: () => import('@/features/legal/pages/ContactPage.vue'),
   },
+  ...(import.meta.env.DEV
+    ? [
+        {
+          path: '/styleguide',
+          name: 'styleguide',
+          component: () => import('@/features/styleguide/pages/StyleguidePage.vue'),
+        },
+      ]
+    : []),
 ] satisfies RouteRecordRaw[];
 
 export const router = createRouter({

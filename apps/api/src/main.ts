@@ -22,8 +22,8 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
-      .setTitle('Quiz Histoire de France — API')
-      .setDescription("Documentation de l'API du quiz sur l'histoire de France")
+      .setTitle('Portulan — API')
+      .setDescription("Documentation de l'API de Portulan")
       .setVersion('1.0')
       .build();
     const document = cleanupOpenApiDoc(SwaggerModule.createDocument(app, config));

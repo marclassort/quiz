@@ -56,14 +56,14 @@ const myRankMessage = computed(() => {
 
 <template>
   <section class="mx-auto max-w-2xl">
-    <h1 class="text-2xl font-bold">{{ $t('leaderboard.title') }}</h1>
+    <h1 class="font-display text-2xl font-bold">{{ $t('leaderboard.title') }}</h1>
 
     <div class="mt-4 flex flex-wrap gap-3">
-      <label class="text-sm text-slate-700">
+      <label class="text-sm text-ink-muted">
         {{ $t('leaderboard.scopeLabel') }}
         <select
           v-model="scope"
-          class="ml-2 rounded-md border-0 px-2 py-1 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+          class="ml-2 rounded-sm border-0 px-2 py-1 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
         >
           <option value="global">{{ $t('leaderboard.scope.global') }}</option>
           <option value="theme">{{ $t('leaderboard.scope.theme') }}</option>
@@ -71,11 +71,11 @@ const myRankMessage = computed(() => {
         </select>
       </label>
 
-      <label v-if="scope === 'theme'" class="text-sm text-slate-700">
+      <label v-if="scope === 'theme'" class="text-sm text-ink-muted">
         {{ $t('leaderboard.themeLabel') }}
         <select
           v-model="themeSlug"
-          class="ml-2 rounded-md border-0 px-2 py-1 text-sm ring-1 ring-inset ring-slate-300 focus:outline focus:outline-2 focus:outline-blue-600"
+          class="ml-2 rounded-sm border-0 px-2 py-1 text-sm ring-1 ring-inset ring-hairline focus:outline focus:outline-2 focus:outline-accent-primary"
         >
           <option v-for="theme in themes" :key="theme.id" :value="theme.slug">
             {{ theme.name }}
@@ -99,7 +99,7 @@ const myRankMessage = computed(() => {
     </BaseAlert>
 
     <template v-else-if="leaderboardPage">
-      <p v-if="leaderboardPage.items.length === 0" class="mt-6 text-slate-600">
+      <p v-if="leaderboardPage.items.length === 0" class="mt-6 text-ink-muted">
         {{ $t('leaderboard.empty') }}
       </p>
 
@@ -110,7 +110,7 @@ const myRankMessage = computed(() => {
           }}
         </caption>
         <thead>
-          <tr class="border-b border-slate-200 text-xs uppercase text-slate-500">
+          <tr class="border-b border-hairline text-xs uppercase text-ink-muted">
             <th scope="col" class="py-2 pr-2">{{ $t('leaderboard.columns.rank') }}</th>
             <th scope="col" class="py-2 pr-2">{{ $t('leaderboard.columns.displayName') }}</th>
             <th scope="col" class="py-2 pr-2">{{ $t('leaderboard.columns.totalScore') }}</th>
@@ -118,15 +118,15 @@ const myRankMessage = computed(() => {
             <th scope="col" class="py-2">{{ $t('leaderboard.columns.quizzesCompleted') }}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="font-data tabular-nums">
           <tr
             v-for="entry in leaderboardPage.items"
             :key="entry.userId"
-            class="border-b border-slate-100"
-            :class="{ 'bg-blue-50 font-medium': entry.userId === authStore.user?.id }"
+            class="border-b border-hairline"
+            :class="{ 'bg-accent-primary/10 font-medium': entry.userId === authStore.user?.id }"
           >
             <td class="py-2 pr-2">{{ entry.rank }}</td>
-            <td class="py-2 pr-2">{{ entry.displayName }}</td>
+            <td class="py-2 pr-2 font-sans">{{ entry.displayName }}</td>
             <td class="py-2 pr-2">{{ entry.totalScore }}</td>
             <td class="py-2 pr-2">{{ accuracyLabel(entry.averageAccuracy) }}</td>
             <td class="py-2">{{ entry.quizzesCompleted }}</td>

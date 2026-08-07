@@ -40,7 +40,7 @@ async function onSubmit() {
 
 <template>
   <section class="mx-auto max-w-sm">
-    <h1 class="text-2xl font-bold">{{ $t('auth.login.title') }}</h1>
+    <h1 class="font-display text-2xl font-bold">{{ $t('auth.login.title') }}</h1>
 
     <form class="mt-6 space-y-4" novalidate @submit.prevent="onSubmit">
       <BaseInput
@@ -65,9 +65,9 @@ async function onSubmit() {
       </BaseButton>
     </form>
 
-    <p class="mt-4 text-sm text-slate-600">
+    <p class="mt-4 text-sm text-ink-muted">
       {{ $t('auth.login.noAccount') }}
-      <RouterLink :to="{ name: 'register' }" class="font-medium text-blue-700 hover:underline">
+      <RouterLink :to="{ name: 'register' }" class="font-medium text-accent-primary hover:underline">
         {{ $t('auth.login.registerLink') }}
       </RouterLink>
     </p>

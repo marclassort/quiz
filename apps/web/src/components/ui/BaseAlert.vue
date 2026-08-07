@@ -8,16 +8,16 @@ withDefaults(defineProps<{ variant?: 'success' | 'error' | 'info' }>(), { varian
 
 <template>
   <div
-    class="flex items-start gap-3 rounded-md border p-4 text-sm"
+    class="flex items-start gap-3 rounded-lg border p-4 text-sm"
     :class="{
-      'border-green-300 bg-green-50 text-green-900': variant === 'success',
-      'border-red-300 bg-red-50 text-red-900': variant === 'error',
-      'border-blue-300 bg-blue-50 text-blue-900': variant === 'info',
+      'border-success/30 bg-success/10 text-success-strong': variant === 'success',
+      'border-error/30 bg-error/10 text-error-strong': variant === 'error',
+      'border-accent-primary/30 bg-accent-primary/10 text-accent-primary-strong': variant === 'info',
     }"
   >
     <svg
       v-if="variant === 'success'"
-      class="mt-0.5 h-5 w-5 flex-none text-green-600"
+      class="mt-0.5 h-5 w-5 flex-none text-success"
       viewBox="0 0 20 20"
       fill="currentColor"
       aria-hidden="true"
@@ -30,7 +30,7 @@ withDefaults(defineProps<{ variant?: 'success' | 'error' | 'info' }>(), { varian
     </svg>
     <svg
       v-else-if="variant === 'error'"
-      class="mt-0.5 h-5 w-5 flex-none text-red-600"
+      class="mt-0.5 h-5 w-5 flex-none text-error"
       viewBox="0 0 20 20"
       fill="currentColor"
       aria-hidden="true"
@@ -43,7 +43,7 @@ withDefaults(defineProps<{ variant?: 'success' | 'error' | 'info' }>(), { varian
     </svg>
     <svg
       v-else
-      class="mt-0.5 h-5 w-5 flex-none text-blue-600"
+      class="mt-0.5 h-5 w-5 flex-none text-accent-primary"
       viewBox="0 0 20 20"
       fill="currentColor"
       aria-hidden="true"
