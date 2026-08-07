@@ -5,11 +5,14 @@ import BaseAlert from '@/components/ui/BaseAlert.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseInput from '@/components/ui/BaseInput.vue';
 import LoadingSpinner from '@/components/ui/LoadingSpinner.vue';
+import RouteProgress from '../components/RouteProgress.vue';
+import { useQuizQuery } from '../api/quizzes';
 import { useQuizSession } from '../composables/useQuizSession';
 
 const props = defineProps<{ slug: string }>();
 
 const session = useQuizSession(props.slug);
+const { data: quiz } = useQuizQuery(() => props.slug);
 
 const selectedChoiceIds = ref<string[]>([]);
 const freeTextAnswer = ref('');
@@ -66,6 +69,13 @@ const canSubmit = () => {
     </BaseAlert>
 
     <template v-else-if="session.phase.value === 'playing' && session.currentQuestion.value">
+      <RouteProgress
+        v-if="quiz"
+        :current="session.currentQuestion.value.position"
+        :total="quiz.questionCount"
+        class="mb-6"
+      />
+
       <form novalidate @submit.prevent="onSubmit">
         <fieldset>
           <legend class="text-xl font-semibold">
@@ -76,7 +86,7 @@ const canSubmit = () => {
             v-if="session.currentQuestion.value.imageUrl"
             :src="session.currentQuestion.value.imageUrl"
             alt=""
-            class="mt-4 max-h-64 rounded-md"
+            class="mt-4 max-h-64 rounded-lg"
           />
 
           <div v-if="session.currentQuestion.value.type === 'FREE_TEXT'" class="mt-4">
@@ -92,7 +102,7 @@ const canSubmit = () => {
             <label
               v-for="choice in session.currentQuestion.value.choices"
               :key="choice.id"
-              class="flex cursor-pointer items-center gap-3 rounded-md border border-slate-200 p-3 hover:bg-slate-50 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-blue-600"
+              class="flex cursor-pointer items-center gap-3 rounded-lg border border-hairline p-3 hover:bg-bg has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent-primary"
             >
               <input
                 v-if="session.currentQuestion.value.type === 'MULTIPLE_CHOICE'"
@@ -129,6 +139,13 @@ const canSubmit = () => {
     </template>
 
     <template v-else-if="session.phase.value === 'feedback' && session.lastResult.value">
+      <RouteProgress
+        v-if="quiz && session.currentQuestion.value"
+        :current="session.currentQuestion.value.position"
+        :total="quiz.questionCount"
+        class="mb-6"
+      />
+
       <BaseAlert
         :variant="session.lastResult.value.isCorrect ? 'success' : 'error'"
         role="status"

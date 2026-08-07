@@ -68,11 +68,12 @@
     "questionsLabel": "Questions :",
     "timeLimitLabel": "Temps imparti :",
     "start": "Commencer le quiz",
-    "seoTitle": "{title} — Quiz Histoire de France"
+    "seoTitle": "{title} — Portulan"
   },
   "quizPlay": {
     "loading": "Chargement de la partie…",
     "error": "Une erreur est survenue.",
+    "progress": "Question {current} sur {total}",
     "answerLabel": "Votre réponse",
     "submit": "Valider ma réponse",
     "submitting": "Envoi…",
