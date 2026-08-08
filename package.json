@@ -4,7 +4,7 @@
   "private": true,
   "description": "Application de quiz sur l'histoire de France — corpus initial : période napoléonienne",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13"
   },
   "packageManager": "pnpm@11.20.0",
   "type": "module",
@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "db:migrate": "pnpm --filter @quiz/api db:migrate",
-    "db:seed": "pnpm --filter @quiz/api db:seed"
+    "db:seed": "pnpm --filter @quiz/api db:seed",
+    "geo:import": "pnpm --filter @quiz/api geo:import"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

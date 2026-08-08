@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { quizDifficultySchema, quizStatusSchema } from '../enums';
+import { gameModeSchema, quizDifficultySchema, quizStatusSchema } from '../enums';
 
 export const createQuizSchema = z.object({
   themeSlug: z.string().min(1),
@@ -8,6 +8,7 @@ export const createQuizSchema = z.object({
   title: z.string().min(1).max(200),
   description: z.string().min(1),
   difficulty: quizDifficultySchema,
+  gameMode: gameModeSchema.optional(),
   timeLimitSeconds: z.int().positive().nullable().optional(),
   speedBonusEnabled: z.boolean().optional(),
 });
@@ -20,6 +21,7 @@ export const adminQuizListQuerySchema = z.object({
   theme: z.string().optional(),
   status: quizStatusSchema.optional(),
   difficulty: quizDifficultySchema.optional(),
+  gameMode: gameModeSchema.optional(),
   page: z.coerce.number().int().min(1).default(1),
 });
 export type AdminQuizListQuery = z.infer<typeof adminQuizListQuerySchema>;

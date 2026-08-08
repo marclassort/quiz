@@ -14,8 +14,24 @@ export const questionTypeSchema = z.enum([
   'MULTIPLE_CHOICE',
   'TRUE_FALSE',
   'FREE_TEXT',
+  'MAP_CLICK',
+  'MAP_PLACE',
 ]);
 export type QuestionType = z.infer<typeof questionTypeSchema>;
 
 export const answerReviewStatusSchema = z.enum(['PENDING', 'ACCEPTED', 'REJECTED']);
 export type AnswerReviewStatus = z.infer<typeof answerReviewStatusSchema>;
+
+export const gameModeSchema = z.enum(['CLASSIC', 'GEO']);
+export type GameMode = z.infer<typeof gameModeSchema>;
+
+export const geoDatasetKindSchema = z.enum([
+  'COUNTRY',
+  'CAPITAL',
+  'CITY',
+  'RIVER',
+  'LAKE',
+  'ADMIN_FR',
+  'OTHER',
+]);
+export type GeoDatasetKind = z.infer<typeof geoDatasetKindSchema>;

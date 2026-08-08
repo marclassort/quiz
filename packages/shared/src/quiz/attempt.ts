@@ -7,10 +7,20 @@ export const submitAnswerSchema = z
     questionId: z.uuid(),
     choiceIds: z.array(z.uuid()).optional(),
     text: z.string().trim().min(1).max(100).optional(),
+    /** `MAP_CLICK` : identifiant de la feature cliquée. */
+    featureId: z.string().min(1).optional(),
+    /** `MAP_PLACE` : point soumis, validé serveur contre la cible. */
+    lat: z.number().min(-90).max(90).optional(),
+    lng: z.number().min(-180).max(180).optional(),
   })
-  .refine((value) => (value.choiceIds?.length ?? 0) > 0 || value.text !== undefined, {
-    message: 'Fournissez soit choiceIds, soit text.',
-  });
+  .refine(
+    (value) =>
+      (value.choiceIds?.length ?? 0) > 0 ||
+      value.text !== undefined ||
+      value.featureId !== undefined ||
+      (value.lat !== undefined && value.lng !== undefined),
+    { message: 'Fournissez choiceIds, text, featureId, ou lat et lng.' },
+  );
 export type SubmitAnswerInput = z.infer<typeof submitAnswerSchema>;
 
 export const currentQuestionResponseSchema = z.object({
@@ -25,6 +35,8 @@ export const answerResultSchema = z.object({
   correctAnswer: z.union([z.string(), z.array(z.string())]),
   explanation: z.string(),
   pointsEarned: z.int(),
+  /** `MAP_PLACE` uniquement : distance orthodromique à la cible, en km. */
+  distanceKm: z.number().optional(),
   nextQuestionId: z.uuid().nullable(),
 });
 export type AnswerResult = z.infer<typeof answerResultSchema>;

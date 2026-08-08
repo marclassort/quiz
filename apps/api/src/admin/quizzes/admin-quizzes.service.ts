@@ -25,6 +25,7 @@ export class AdminQuizzesService {
       ...(query.theme ? { theme: { slug: query.theme } } : {}),
       ...(query.status ? { status: query.status } : {}),
       ...(query.difficulty ? { difficulty: query.difficulty } : {}),
+      ...(query.gameMode ? { gameMode: query.gameMode } : {}),
     };
 
     const [items, total] = await this.prisma.$transaction([
@@ -68,6 +69,7 @@ export class AdminQuizzesService {
           title: input.title,
           description: input.description,
           difficulty: input.difficulty,
+          gameMode: input.gameMode ?? 'CLASSIC',
           timeLimitSeconds: input.timeLimitSeconds,
           speedBonusEnabled: input.speedBonusEnabled ?? false,
         },

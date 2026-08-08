@@ -13,6 +13,7 @@ function toQuizSummary(quiz: Quiz & { theme: { slug: string } }): QuizSummary {
     title: quiz.title,
     description: quiz.description,
     difficulty: quiz.difficulty,
+    gameMode: quiz.gameMode,
     questionCount: quiz.questionCount,
     timeLimitSeconds: quiz.timeLimitSeconds,
     themeSlug: quiz.theme.slug,
@@ -34,6 +35,7 @@ export class QuizzesService {
       status: 'PUBLISHED' as const,
       ...(query.theme ? { theme: { slug: query.theme } } : {}),
       ...(query.difficulty ? { difficulty: query.difficulty } : {}),
+      ...(query.gameMode ? { gameMode: query.gameMode } : {}),
     };
 
     const [quizzes, total] = await this.prisma.$transaction([

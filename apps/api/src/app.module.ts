@@ -8,6 +8,7 @@ import { AttemptsModule } from './attempts/attempts.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { GeoModule } from './geo/geo.module';
 import { HealthModule } from './health/health.module';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { PrismaModule } from './prisma/prisma.module';
@@ -36,6 +37,7 @@ import { UsersModule } from './users/users.module';
     HealthModule,
     ThemesModule,
     QuizzesModule,
+    GeoModule,
     AttemptsModule,
     LeaderboardModule,
     UsersModule,

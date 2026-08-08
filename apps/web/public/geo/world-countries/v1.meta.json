@@ -1,0 +1,11 @@
+{
+  "slug": "world-countries",
+  "name": "Pays du monde",
+  "kind": "COUNTRY",
+  "scope": "world",
+  "sourceName": "Natural Earth — Admin 0 Countries (1:110m)",
+  "sourceUrl": "https://www.naturalearthdata.com/downloads/110m-cultural-vectors/110m-admin-0-countries/",
+  "license": "Public Domain",
+  "attributionText": "Cartographie : Natural Earth (domaine public), naturalearthdata.com.",
+  "version": "v1"
+}

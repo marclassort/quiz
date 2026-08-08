@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -12,6 +13,12 @@ import type {
   PublicQuestion,
   SubmitAnswerInput,
 } from '@quiz/shared';
+import {
+  mapClickPayloadSchema,
+  mapPlacePayloadSchema,
+  publicMapClickPayloadSchema,
+  publicMapPlacePayloadSchema,
+} from '@quiz/shared';
 
 import { Prisma } from '../generated/prisma/client';
 import type { QuestionModel as Question } from '../generated/prisma/models';
@@ -21,6 +28,7 @@ import { UserStatsService } from '../user-stats/user-stats.service';
 import { AnswerReviewService } from './answer-review.service';
 import { shuffleForAttempt } from './choice-shuffle';
 import { matchFreeTextAnswer } from './free-text-correction/matcher';
+import { computeMapPlaceResult, isFeatureClickCorrect } from './geo-scoring';
 import type { Identity } from './identity';
 import { computePointsEarned, isChoiceSelectionCorrect } from './scoring';
 
@@ -107,18 +115,36 @@ export class AttemptsService {
     const referenceStart = lastAnswer?.submittedAt ?? attempt.startedAt;
     const answerTimeMs = Math.max(0, Date.now() - referenceStart.getTime());
 
-    const { isCorrect, correctAnswer } = await this.evaluateAnswer(question, input);
-
-    const pointsEarned = computePointsEarned(
+    const {
       isCorrect,
-      question.points,
-      {
-        speedBonusEnabled: quiz.speedBonusEnabled,
-        timeLimitSeconds: quiz.timeLimitSeconds,
-        questionCountInQuiz: quiz.questionCount,
-      },
-      answerTimeMs,
-    );
+      correctAnswer,
+      distanceKm,
+      datasetVersion,
+      pointsEarned: geoPointsEarned,
+    } = await this.evaluateAnswer(question, input);
+
+    // MAP_PLACE porte son propre score dégressif à la distance
+    // (docs/SCORING.md) : pas de bonus de rapidité, pas de calcul standard.
+    const pointsEarned =
+      geoPointsEarned ??
+      computePointsEarned(
+        isCorrect,
+        question.points,
+        {
+          speedBonusEnabled: quiz.speedBonusEnabled,
+          timeLimitSeconds: quiz.timeLimitSeconds,
+          questionCountInQuiz: quiz.questionCount,
+        },
+        answerTimeMs,
+      );
+
+    const rawAnswer: Prisma.InputJsonValue = input.choiceIds
+      ? { choiceIds: input.choiceIds }
+      : input.featureId !== undefined
+        ? { featureId: input.featureId }
+        : input.lat !== undefined && input.lng !== undefined
+          ? { lat: input.lat, lng: input.lng }
+          : { text: input.text };
 
     try {
       await this.prisma.$transaction([
@@ -126,12 +152,11 @@ export class AttemptsService {
           data: {
             attemptId,
             questionId: question.id,
-            rawAnswer: (input.choiceIds
-              ? { choiceIds: input.choiceIds }
-              : { text: input.text }) as Prisma.InputJsonValue,
+            rawAnswer,
             isCorrect,
             pointsEarned,
             answerTimeMs,
+            datasetVersion,
           },
         }),
         this.prisma.attempt.update({
@@ -160,6 +185,7 @@ export class AttemptsService {
       correctAnswer,
       explanation: question.explanation,
       pointsEarned,
+      distanceKm,
       nextQuestionId: nextQuestion?.id ?? null,
     };
   }
@@ -257,8 +283,20 @@ export class AttemptsService {
 
   private async toPublicQuestion(attemptId: string, question: Question): Promise<PublicQuestion> {
     let choices: PublicChoice[] = [];
+    let payload: PublicQuestion['payload'] = null;
 
-    if (question.type !== 'FREE_TEXT') {
+    if (question.type === 'MAP_CLICK') {
+      const fullPayload = mapClickPayloadSchema.parse(question.payload);
+      const datasetSlug = await this.resolveDatasetSlug(fullPayload.datasetId);
+      // Le payload admin (avec featureIds) n'est jamais construit dans une
+      // variable exposée telle quelle : .parse() par le schéma public
+      // dépouille structurellement les champs sensibles (claude.md §4).
+      payload = publicMapClickPayloadSchema.parse({ ...fullPayload, datasetSlug });
+    } else if (question.type === 'MAP_PLACE') {
+      const fullPayload = mapPlacePayloadSchema.parse(question.payload);
+      const datasetSlug = await this.resolveDatasetSlug(fullPayload.datasetId);
+      payload = publicMapPlacePayloadSchema.parse({ ...fullPayload, datasetSlug });
+    } else if (question.type !== 'FREE_TEXT') {
       const rawChoices = await this.prisma.choice.findMany({
         where: { questionId: question.id },
         orderBy: { position: 'asc' },
@@ -278,7 +316,19 @@ export class AttemptsService {
       imageUrl: question.imageUrl,
       points: question.points,
       choices,
+      payload,
     };
+  }
+
+  /**
+   * Le payload stocké ne porte que `datasetId` (clé étrangère réelle) ; le
+   * client a besoin du slug pour construire l'URL du TopoJSON statique
+   * (apps/web/public/geo/<slug>/<version>.topojson) sans aller-retour
+   * supplémentaire — résolu ici plutôt que côté client.
+   */
+  private async resolveDatasetSlug(datasetId: string): Promise<string> {
+    const dataset = await this.prisma.geoDataset.findUniqueOrThrow({ where: { id: datasetId } });
+    return dataset.slug;
   }
 
   private async evaluateAnswer(
@@ -287,7 +337,52 @@ export class AttemptsService {
       acceptedAnswers: { value: string; isPrimary: boolean }[];
     },
     input: SubmitAnswerInput,
-  ): Promise<{ isCorrect: boolean; correctAnswer: string | string[] }> {
+  ): Promise<{
+    isCorrect: boolean;
+    correctAnswer: string | string[];
+    distanceKm?: number;
+    datasetVersion?: string;
+    /**
+     * Fourni uniquement par MAP_PLACE : score dégressif selon la distance
+     * (docs/SCORING.md), qui remplace entièrement le calcul standard
+     * tout-ou-rien ± bonus de rapidité de computePointsEarned — pas de bonus
+     * de rapidité sur MAP_PLACE, cf. docs/SCORING.md.
+     */
+    pointsEarned?: number;
+  }> {
+    if (question.type === 'MAP_CLICK') {
+      if (input.featureId === undefined) {
+        throw new BadRequestException('Cette question attend un featureId.');
+      }
+      const payload = mapClickPayloadSchema.parse(question.payload);
+      const isCorrect = isFeatureClickCorrect(payload.featureIds, input.featureId);
+      return {
+        isCorrect,
+        correctAnswer: payload.featureIds,
+        datasetVersion: payload.datasetVersion,
+      };
+    }
+
+    if (question.type === 'MAP_PLACE') {
+      if (input.lat === undefined || input.lng === undefined) {
+        throw new BadRequestException('Cette question attend lat et lng.');
+      }
+      const payload = mapPlacePayloadSchema.parse(question.payload);
+      const { isCorrect, distanceKm, pointsEarned } = computeMapPlaceResult(
+        { lat: payload.targetLat, lng: payload.targetLng },
+        { lat: input.lat, lng: input.lng },
+        payload.toleranceKm,
+        question.points,
+      );
+      return {
+        isCorrect,
+        correctAnswer: `${payload.targetLat}, ${payload.targetLng}`,
+        distanceKm,
+        datasetVersion: payload.datasetVersion,
+        pointsEarned,
+      };
+    }
+
     if (question.type === 'FREE_TEXT') {
       const submittedText = input.text ?? '';
       const { isCorrect } = matchFreeTextAnswer(

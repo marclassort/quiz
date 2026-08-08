@@ -1,8 +1,11 @@
 import 'dotenv/config';
 
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
 import { PrismaPg } from '@prisma/adapter-pg';
 
-import { PrismaClient } from '../src/generated/prisma/client';
+import { Prisma, PrismaClient } from '../src/generated/prisma/client';
 
 /**
  * Seed napoléonien (claude.md §10) : contenu de démonstration, `status =
@@ -322,6 +325,119 @@ const institutionsQuiz: SeedQuestion[] = [
   },
 ];
 
+/**
+ * Quiz de démonstration cartographique (lot 3, étape 6) : « Capitales
+ * d'Europe », DRAFT, sourcé. Réutilise le dataset world-countries déjà
+ * importé (pnpm geo:import, étape 2) — ni MAP_CLICK ni MAP_PLACE n'ont
+ * besoin d'un dataset de points dédié : le centroïde d'une feature suffit
+ * de candidat clavier pour MAP_PLACE (voir ADR 001 / plan étape 5). Les
+ * capitales sont des faits constitutionnels établis et non controversés,
+ * pas des questions d'histoire au sens de claude.md §4 — mais chaque
+ * question porte tout de même une source, par discipline.
+ */
+interface SeedGeoQuestion {
+  type: 'MAP_CLICK' | 'MAP_PLACE';
+  statement: string;
+  explanation: string;
+  source: string;
+  points: number;
+  payload: Record<string, unknown>;
+}
+
+function europeanCapitalsQuiz(datasetId: string, datasetVersion: string): SeedGeoQuestion[] {
+  const source = 'Capitale constitutionnelle de l’État concerné (fait géographique établi).';
+
+  return [
+    {
+      type: 'MAP_CLICK',
+      statement: 'Cliquez sur le pays dont la capitale est Berlin.',
+      explanation: 'Berlin est la capitale de l’Allemagne depuis la réunification de 1990.',
+      source,
+      points: 1,
+      payload: {
+        datasetId,
+        datasetVersion,
+        featureIds: ['DEU'],
+        prompt: 'Sélectionnez le pays sur la carte ou dans la liste.',
+        distractorPolicy: 'ALL_FEATURES',
+      },
+    },
+    {
+      type: 'MAP_PLACE',
+      statement: 'Placez Paris, capitale de la France.',
+      explanation: 'Paris est la capitale de la France.',
+      source,
+      points: 10,
+      payload: {
+        datasetId,
+        datasetVersion,
+        targetLat: 48.8566,
+        targetLng: 2.3522,
+        toleranceKm: 300,
+        scoringCurve: 'LINEAR',
+      },
+    },
+    {
+      type: 'MAP_CLICK',
+      statement: 'Cliquez sur le pays dont la capitale est Madrid.',
+      explanation: 'Madrid est la capitale de l’Espagne.',
+      source,
+      points: 1,
+      payload: {
+        datasetId,
+        datasetVersion,
+        featureIds: ['ESP'],
+        prompt: 'Sélectionnez le pays sur la carte ou dans la liste.',
+        distractorPolicy: 'ALL_FEATURES',
+      },
+    },
+    {
+      type: 'MAP_PLACE',
+      statement: 'Placez Rome, capitale de l’Italie.',
+      explanation: 'Rome est la capitale de l’Italie.',
+      source,
+      points: 10,
+      payload: {
+        datasetId,
+        datasetVersion,
+        targetLat: 41.9028,
+        targetLng: 12.4964,
+        toleranceKm: 300,
+        scoringCurve: 'LINEAR',
+      },
+    },
+    {
+      type: 'MAP_CLICK',
+      statement: 'Cliquez sur le pays dont la capitale est Varsovie.',
+      explanation: 'Varsovie est la capitale de la Pologne.',
+      source,
+      points: 1,
+      payload: {
+        datasetId,
+        datasetVersion,
+        featureIds: ['POL'],
+        prompt: 'Sélectionnez le pays sur la carte ou dans la liste.',
+        distractorPolicy: 'ALL_FEATURES',
+      },
+    },
+    {
+      type: 'MAP_PLACE',
+      statement: 'Placez Athènes, capitale de la Grèce.',
+      explanation: 'Athènes est la capitale de la Grèce.',
+      source,
+      points: 10,
+      payload: {
+        datasetId,
+        datasetVersion,
+        targetLat: 37.9838,
+        targetLng: 23.7275,
+        toleranceKm: 300,
+        scoringCurve: 'LINEAR',
+      },
+    },
+  ];
+}
+
 async function main() {
   const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
   const prisma = new PrismaClient({ adapter });
@@ -407,9 +523,82 @@ async function main() {
     institutionsQuiz,
   );
 
+  // --- Géographie cartographique (lot 3, étape 6) ---
+
+  const geoThemeSlug = 'geographie-cartographique';
+  const geoQuizSlug = 'capitales-europe';
+
+  await prisma.quiz.deleteMany({ where: { slug: geoQuizSlug } });
+  await prisma.theme.deleteMany({ where: { slug: geoThemeSlug } });
+
+  // Enregistre le GeoDataset importé par `pnpm geo:import` (étape 2) à
+  // partir des métadonnées écrites à côté du TopoJSON — la table n'existe
+  // qu'en base, le fichier meta.json en est la source de vérité (ADR 001).
+  const metaPath = path.resolve(
+    __dirname,
+    '../../web/public/geo/world-countries/v1.meta.json',
+  );
+  const datasetMeta = JSON.parse(readFileSync(metaPath, 'utf-8')) as {
+    slug: string;
+    name: string;
+    kind: 'COUNTRY' | 'CAPITAL' | 'CITY' | 'RIVER' | 'LAKE' | 'ADMIN_FR' | 'OTHER';
+    scope: string;
+    sourceName: string;
+    sourceUrl: string;
+    license: string;
+    attributionText: string;
+    version: string;
+  };
+  const dataset = await prisma.geoDataset.upsert({
+    where: { slug: datasetMeta.slug },
+    create: datasetMeta,
+    update: datasetMeta,
+  });
+
+  const geoTheme = await prisma.theme.create({
+    data: {
+      slug: geoThemeSlug,
+      name: 'Géographie cartographique',
+      description: 'Cartes, frontières et capitales — second corpus du projet (claude.md §1).',
+      position: 2,
+    },
+  });
+
+  const geoQuestions = europeanCapitalsQuiz(dataset.id, dataset.version);
+  const geoQuiz = await prisma.quiz.create({
+    data: {
+      themeId: geoTheme.id,
+      slug: geoQuizSlug,
+      title: 'Capitales d’Europe',
+      description: 'Cliquez et placez les capitales de quelques pays européens sur la carte.',
+      difficulty: 'EASY',
+      gameMode: 'GEO',
+      status: 'DRAFT',
+      questionCount: geoQuestions.length,
+    },
+  });
+
+  for (const [index, question] of geoQuestions.entries()) {
+    await prisma.question.create({
+      data: {
+        quizId: geoQuiz.id,
+        position: index + 1,
+        type: question.type,
+        statement: question.statement,
+        explanation: question.explanation,
+        source: question.source,
+        points: question.points,
+        payload: question.payload as Prisma.InputJsonValue,
+      },
+    });
+  }
+
   const totalQuestions = battlesQuiz.length + institutionsQuiz.length;
   console.log(
     `Seed napoléonien : thème "${theme.name}" + 2 quiz DRAFT + ${totalQuestions} questions.`,
+  );
+  console.log(
+    `Seed géographique : dataset "${dataset.slug}" (${dataset.version}) + thème "${geoTheme.name}" + 1 quiz DRAFT + ${geoQuestions.length} questions.`,
   );
 
   await prisma.$disconnect();

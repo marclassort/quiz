@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -25,6 +26,7 @@ import {
   UpdateAcceptedAnswerDto,
   UpdateChoiceDto,
   UpdateQuestionDto,
+  UpdateQuestionPayloadDto,
 } from './dto';
 
 @ApiTags('admin/questions')
@@ -61,6 +63,15 @@ export class AdminQuestionsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.adminQuestionsService.remove(id);
+  }
+
+  @Put(':id/payload')
+  updatePayload(
+    @Param('id') id: string,
+    @Body() dto: UpdateQuestionPayloadDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.adminQuestionsService.updatePayload(id, dto, user.id);
   }
 
   @Get(':id/choices')
