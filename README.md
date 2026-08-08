@@ -1,4 +1,4 @@
-# Quiz 
+# Quiz
 
 Application de quiz sur la culture générale.
 

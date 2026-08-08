@@ -534,10 +534,7 @@ async function main() {
   // Enregistre le GeoDataset importé par `pnpm geo:import` (étape 2) à
   // partir des métadonnées écrites à côté du TopoJSON — la table n'existe
   // qu'en base, le fichier meta.json en est la source de vérité (ADR 001).
-  const metaPath = path.resolve(
-    __dirname,
-    '../../web/public/geo/world-countries/v1.meta.json',
-  );
+  const metaPath = path.resolve(__dirname, '../../web/public/geo/world-countries/v1.meta.json');
   const datasetMeta = JSON.parse(readFileSync(metaPath, 'utf-8')) as {
     slug: string;
     name: string;

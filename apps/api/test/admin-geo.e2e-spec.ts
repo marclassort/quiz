@@ -168,7 +168,9 @@ describe('Admin — datasets géographiques et payload de question (e2e)', () =>
     const response = await request(app.getHttpServer())
       .put(`/api/v1/admin/questions/${mapClickQuestionId}/payload`)
       .set('Cookie', auth(adminCookie))
-      .send({ payload: { datasetId, featureIds: [], prompt: 'x', distractorPolicy: 'ALL_FEATURES' } });
+      .send({
+        payload: { datasetId, featureIds: [], prompt: 'x', distractorPolicy: 'ALL_FEATURES' },
+      });
     expect(response.status).toBe(400);
   });
 
@@ -186,7 +188,9 @@ describe('Admin — datasets géographiques et payload de question (e2e)', () =>
     const response = await request(app.getHttpServer())
       .put(`/api/v1/admin/questions/${classicQuestion.id}/payload`)
       .set('Cookie', auth(adminCookie))
-      .send({ payload: { datasetId, featureIds: ['FRA'], prompt: 'x', distractorPolicy: 'ALL_FEATURES' } });
+      .send({
+        payload: { datasetId, featureIds: ['FRA'], prompt: 'x', distractorPolicy: 'ALL_FEATURES' },
+      });
     expect(response.status).toBe(400);
     await prisma.question.deleteMany({ where: { id: classicQuestion.id } });
   });

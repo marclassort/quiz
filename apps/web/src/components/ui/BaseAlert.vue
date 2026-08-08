@@ -12,7 +12,8 @@ withDefaults(defineProps<{ variant?: 'success' | 'error' | 'info' }>(), { varian
     :class="{
       'border-success/30 bg-success/10 text-success-strong': variant === 'success',
       'border-error/30 bg-error/10 text-error-strong': variant === 'error',
-      'border-accent-primary/30 bg-accent-primary/10 text-accent-primary-strong': variant === 'info',
+      'border-accent-primary/30 bg-accent-primary/10 text-accent-primary-strong':
+        variant === 'info',
     }"
   >
     <svg

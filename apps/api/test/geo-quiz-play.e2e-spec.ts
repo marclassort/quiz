@@ -149,9 +149,7 @@ describe('Partie cartographique (e2e) — non-fuite MAP_CLICK/MAP_PLACE', () => 
   });
 
   it('GET /geo/datasets/:slug renvoie les métadonnées et l’attribution', async () => {
-    const response = await request(app.getHttpServer()).get(
-      `/api/v1/geo/datasets/${datasetSlug}`,
-    );
+    const response = await request(app.getHttpServer()).get(`/api/v1/geo/datasets/${datasetSlug}`);
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({
       slug: datasetSlug,

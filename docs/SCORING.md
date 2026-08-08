@@ -36,12 +36,12 @@ Autrement dit : points pleins à distance nulle, décroissance linéaire jusqu'�
 
 **Cas limites traités et testés** (`geo-scoring.spec.ts`) :
 
-| Cas | Comportement |
-| --- | --- |
-| Distance nulle | `isCorrect = true`, points pleins |
-| Distance exactement égale à `toleranceKm` | `isCorrect = true` (borne incluse), mais `pointsEarned = 0` (`ratio = 0`) — délibéré : « dans la tolérance » et « gagner des points » sont deux questions distinctes à la limite exacte |
-| Franchissement de l'antiméridien (ex. 179°E ↔ 179°O) | Distance correcte (~2°, pas ~358°) — géré nativement par le calcul du grand cercle, aucun traitement particulier requis |
-| Latitudes polaires (±90°) | Calculable, résultat fini |
-| Coordonnées hors bornes (lat ∉ [−90, 90], lng ∉ [−180, 180]) | `RangeError` — rejeté avant même le calcul de distance ; la validation Zod (`submitAnswerSchema`) rejette aussi ces valeurs en amont, côté HTTP |
+| Cas                                                          | Comportement                                                                                                                                                                            |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Distance nulle                                               | `isCorrect = true`, points pleins                                                                                                                                                       |
+| Distance exactement égale à `toleranceKm`                    | `isCorrect = true` (borne incluse), mais `pointsEarned = 0` (`ratio = 0`) — délibéré : « dans la tolérance » et « gagner des points » sont deux questions distinctes à la limite exacte |
+| Franchissement de l'antiméridien (ex. 179°E ↔ 179°O)         | Distance correcte (~2°, pas ~358°) — géré nativement par le calcul du grand cercle, aucun traitement particulier requis                                                                 |
+| Latitudes polaires (±90°)                                    | Calculable, résultat fini                                                                                                                                                               |
+| Coordonnées hors bornes (lat ∉ [−90, 90], lng ∉ [−180, 180]) | `RangeError` — rejeté avant même le calcul de distance ; la validation Zod (`submitAnswerSchema`) rejette aussi ces valeurs en amont, côté HTTP                                         |
 
 `AttemptAnswer.rawAnswer` enregistre `{ lat, lng }` ou `{ featureId }` selon le type, et `datasetVersion` la version du dataset utilisée au moment de la réponse — pour que la correction reste reproductible après mise à jour d'un dataset (game-rules.md §5), même si le dataset change de version ensuite.

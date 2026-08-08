@@ -52,9 +52,9 @@ describe('mapPlacePayloadSchema', () => {
     ['longitude hors bornes', { targetLng: -181 }],
     ['tolérance négative', { toleranceKm: -1 }],
   ])('rejette : %s', (_label, override) => {
-    expect(
-      mapPlacePayloadSchema.safeParse({ ...fullMapPlacePayload, ...override }).success,
-    ).toBe(false);
+    expect(mapPlacePayloadSchema.safeParse({ ...fullMapPlacePayload, ...override }).success).toBe(
+      false,
+    );
   });
 });
 
@@ -78,7 +78,12 @@ describe('anti-triche : schémas publics', () => {
     expect((result as Record<string, unknown>).targetLat).toBeUndefined();
     expect((result as Record<string, unknown>).targetLng).toBeUndefined();
     expect((result as Record<string, unknown>).datasetId).toBeUndefined();
-    expect(result).toEqual({ datasetSlug, datasetVersion: 'v1', toleranceKm: 50, scoringCurve: 'LINEAR' });
+    expect(result).toEqual({
+      datasetSlug,
+      datasetVersion: 'v1',
+      toleranceKm: 50,
+      scoringCurve: 'LINEAR',
+    });
   });
 });
 

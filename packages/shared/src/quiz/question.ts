@@ -28,6 +28,9 @@ export const publicQuestionSchema = z.object({
    * publicMapPlacePayloadSchema). Optionnel pour rester compatible avec les
    * questions classiques déjà en place, qui ne le renseignent jamais.
    */
-  payload: z.union([publicMapClickPayloadSchema, publicMapPlacePayloadSchema]).nullable().optional(),
+  payload: z
+    .union([publicMapClickPayloadSchema, publicMapPlacePayloadSchema])
+    .nullable()
+    .optional(),
 });
 export type PublicQuestion = z.infer<typeof publicQuestionSchema>;

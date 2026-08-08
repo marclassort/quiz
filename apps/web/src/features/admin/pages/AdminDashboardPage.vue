@@ -27,7 +27,10 @@ const sortedSuccessRates = computed(() =>
       <RouterLink :to="{ name: 'admin-quizzes' }" class="text-accent-primary hover:underline">
         {{ $t('admin.nav.quizzes') }}
       </RouterLink>
-      <RouterLink :to="{ name: 'admin-answer-reviews' }" class="text-accent-primary hover:underline">
+      <RouterLink
+        :to="{ name: 'admin-answer-reviews' }"
+        class="text-accent-primary hover:underline"
+      >
         {{ $t('admin.nav.answerReviews') }}
       </RouterLink>
     </nav>

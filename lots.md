@@ -9,7 +9,7 @@ Ordre retenu : **1 → 2 → 3 → 4**. L'admin passe après la carto, pour ne p
 
 ## Lot 1 — Système de design et identité
 
-*Branche `feat/design-system`. Aucune fonctionnalité modifiée. Modèle : Opus pour la phase de propositions, Sonnet pour l'implémentation.*
+_Branche `feat/design-system`. Aucune fonctionnalité modifiée. Modèle : Opus pour la phase de propositions, Sonnet pour l'implémentation._
 
 > Lis `docs/spec/frontend.md`, sections 1 et 2 uniquement. Ne lis aucun autre fichier de spec et n'explore pas le code existant pour l'instant.
 >
@@ -29,7 +29,7 @@ Puis, après validation, dans la **même** session :
 
 ## Lot 2 — Refonte de l'interface de jeu
 
-*Branche `feat/ui-refonte`. Contrats d'API inchangés. Une session par groupe d'écrans, pas une session pour les sept.*
+_Branche `feat/ui-refonte`. Contrats d'API inchangés. Une session par groupe d'écrans, pas une session pour les sept._
 
 > Lis `docs/spec/frontend.md` en entier. N'ouvre pas les fichiers du back.
 >
@@ -51,7 +51,7 @@ Puis :
 
 ## Lot 3 — Module cartographique
 
-*Branche `feat/geo`. Six étapes, une validation entre chacune, deux à trois sessions.*
+_Branche `feat/geo`. Six étapes, une validation entre chacune, deux à trois sessions._
 
 Session A :
 
@@ -77,7 +77,7 @@ Session C :
 
 ## Lot 4 — Refonte du back-office
 
-*Branche `feat/admin`. Contrats d'API constants ; ajoute des endpoints si nécessaire, n'en casse aucun.*
+_Branche `feat/admin`. Contrats d'API constants ; ajoute des endpoints si nécessaire, n'en casse aucun._
 
 Session A :
 

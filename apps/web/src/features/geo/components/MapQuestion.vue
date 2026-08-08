@@ -85,7 +85,6 @@ function onSvgClick(event: MouseEvent) {
   const { x, y } = point.matrixTransform(ctm.inverse());
   selectPoint(x, y);
 }
-
 </script>
 
 <template>
@@ -138,7 +137,11 @@ function onSvgClick(event: MouseEvent) {
 
       <fieldset class="mt-4">
         <legend class="text-sm font-medium text-ink-muted">
-          {{ type === 'MAP_CLICK' ? 'Ou choisissez dans la liste' : 'Ou choisissez un lieu dans la liste' }}
+          {{
+            type === 'MAP_CLICK'
+              ? 'Ou choisissez dans la liste'
+              : 'Ou choisissez un lieu dans la liste'
+          }}
         </legend>
         <BaseInput v-model="filterText" label="Filtrer" class="mt-2" />
         <div class="mt-2 max-h-64 space-y-1 overflow-y-auto rounded-lg border border-hairline p-2">

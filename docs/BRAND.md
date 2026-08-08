@@ -2,7 +2,7 @@
 
 ## Nom et baseline
 
-**Portulan** — *« Portulan, la culture générale prend le large. »*
+**Portulan** — _« Portulan, la culture générale prend le large. »_
 
 Un portulan est une carte marine ancienne à lignes de rumb, utilisée pour la navigation avant l'usage de la projection de Mercator. Le nom ancre le produit dans son sujet (cartographie ancienne, XIXᵉ siècle) sans se limiter à un seul corpus — il couvre aussi bien l'histoire de France que la géographie cartographique.
 
@@ -14,14 +14,14 @@ Aucun dégradé, aucune ombre portée. Toutes les déclinaisons restent lisibles
 
 ### Fichiers
 
-| Fichier | Usage |
-| --- | --- |
-| `public/brand/logo-mark.svg` | Monogramme carré seul — favicon, avatar, espaces exigus |
-| `public/brand/logo.svg` | Version horizontale (monogramme + nom), couleur — usage par défaut |
-| `public/brand/logo-mono.svg` | Version horizontale, une seule couleur (`currentColor`) — impression, contextes à couleur unique |
-| `public/favicon.svg` | = `logo-mark.svg`, favicon SVG moderne |
-| `public/favicon-32x32.png` | Favicon PNG, fallback navigateurs sans support SVG |
-| `public/apple-touch-icon.png` | Icône iOS/Android (180×180) |
+| Fichier                       | Usage                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------ |
+| `public/brand/logo-mark.svg`  | Monogramme carré seul — favicon, avatar, espaces exigus                                          |
+| `public/brand/logo.svg`       | Version horizontale (monogramme + nom), couleur — usage par défaut                               |
+| `public/brand/logo-mono.svg`  | Version horizontale, une seule couleur (`currentColor`) — impression, contextes à couleur unique |
+| `public/favicon.svg`          | = `logo-mark.svg`, favicon SVG moderne                                                           |
+| `public/favicon-32x32.png`    | Favicon PNG, fallback navigateurs sans support SVG                                               |
+| `public/apple-touch-icon.png` | Icône iOS/Android (180×180)                                                                      |
 
 ## Couleurs autorisées
 

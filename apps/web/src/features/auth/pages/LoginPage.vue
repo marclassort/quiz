@@ -68,7 +68,10 @@ async function onSubmit() {
 
     <p class="mt-4 text-sm text-ink-muted">
       {{ $t('auth.login.noAccount') }}
-      <RouterLink :to="{ name: 'register' }" class="font-medium text-accent-primary hover:underline">
+      <RouterLink
+        :to="{ name: 'register' }"
+        class="font-medium text-accent-primary hover:underline"
+      >
         {{ $t('auth.login.registerLink') }}
       </RouterLink>
     </p>
