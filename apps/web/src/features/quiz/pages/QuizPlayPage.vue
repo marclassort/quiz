@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { defineAsyncComponent, onMounted, ref, watch } from 'vue';
+import type { SubmitAnswerInput } from '@quiz/shared';
 
 import BaseAlert from '@/components/ui/BaseAlert.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
@@ -9,6 +10,12 @@ import RouteProgress from '../components/RouteProgress.vue';
 import { useQuizQuery } from '../api/quizzes';
 import { useQuizSession } from '../composables/useQuizSession';
 
+// features/geo n'entre jamais dans le bundle d'entrée (frontend.md §3) :
+// chargé en chunk séparé, seulement quand une question géo apparaît.
+const MapQuestion = defineAsyncComponent(
+  () => import('@/features/geo/components/MapQuestion.vue'),
+);
+
 const props = defineProps<{ slug: string }>();
 
 const session = useQuizSession(props.slug);
@@ -16,6 +23,7 @@ const { data: quiz } = useQuizQuery(() => props.slug);
 
 const selectedChoiceIds = ref<string[]>([]);
 const freeTextAnswer = ref('');
+const mapAnswer = ref<{ featureId: string } | { lat: number; lng: number } | null>(null);
 
 onMounted(() => {
   session.initialize();
@@ -27,6 +35,7 @@ watch(
   () => {
     selectedChoiceIds.value = [];
     freeTextAnswer.value = '';
+    mapAnswer.value = null;
   },
 );
 
@@ -46,6 +55,9 @@ function onSubmit() {
 
   if (question.type === 'FREE_TEXT') {
     session.answer({ questionId: question.id, text: freeTextAnswer.value });
+  } else if (question.type === 'MAP_CLICK' || question.type === 'MAP_PLACE') {
+    if (!mapAnswer.value) return;
+    session.answer({ questionId: question.id, ...mapAnswer.value } as SubmitAnswerInput);
   } else {
     session.answer({ questionId: question.id, choiceIds: selectedChoiceIds.value });
   }
@@ -54,9 +66,9 @@ function onSubmit() {
 const canSubmit = () => {
   const question = session.currentQuestion.value;
   if (!question) return false;
-  return question.type === 'FREE_TEXT'
-    ? freeTextAnswer.value.trim().length > 0
-    : selectedChoiceIds.value.length > 0;
+  if (question.type === 'FREE_TEXT') return freeTextAnswer.value.trim().length > 0;
+  if (question.type === 'MAP_CLICK' || question.type === 'MAP_PLACE') return mapAnswer.value !== null;
+  return selectedChoiceIds.value.length > 0;
 };
 </script>
 
@@ -110,6 +122,21 @@ const canSubmit = () => {
               :label="$t('quizPlay.answerLabel')"
               autocomplete="off"
               :maxlength="100"
+            />
+          </div>
+
+          <div
+            v-else-if="
+              (session.currentQuestion.value.type === 'MAP_CLICK' ||
+                session.currentQuestion.value.type === 'MAP_PLACE') &&
+              session.currentQuestion.value.payload
+            "
+            class="mt-4"
+          >
+            <MapQuestion
+              v-model:answer="mapAnswer"
+              :type="session.currentQuestion.value.type"
+              :payload="session.currentQuestion.value.payload"
             />
           </div>
 

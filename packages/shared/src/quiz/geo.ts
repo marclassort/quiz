@@ -74,22 +74,26 @@ export type GeoQuestionPayload = z.infer<typeof geoQuestionPayloadSchema>;
 // --- targetLng (claude.md §4 anti-triche). Dérivé par .pick() plutôt que ---
 // --- redéfini à la main : un champ sensible ajouté au payload admin plus ---
 // --- tard doit être explicitement repris ici pour être exposé, jamais ---
-// --- par défaut. ---
+// --- par défaut. `datasetSlug` remplace `datasetId` (dérivé serveur depuis ---
+// --- le GeoDataset référencé) : c'est ce dont le client a besoin pour ---
+// --- construire l'URL du TopoJSON statique, pas l'id interne. ---
 
-export const publicMapClickPayloadSchema = mapClickPayloadSchema.pick({
-  datasetId: true,
-  datasetVersion: true,
-  prompt: true,
-  distractorPolicy: true,
-});
+export const publicMapClickPayloadSchema = mapClickPayloadSchema
+  .pick({
+    datasetVersion: true,
+    prompt: true,
+    distractorPolicy: true,
+  })
+  .extend({ datasetSlug: z.string() });
 export type PublicMapClickPayload = z.infer<typeof publicMapClickPayloadSchema>;
 
-export const publicMapPlacePayloadSchema = mapPlacePayloadSchema.pick({
-  datasetId: true,
-  datasetVersion: true,
-  toleranceKm: true,
-  scoringCurve: true,
-});
+export const publicMapPlacePayloadSchema = mapPlacePayloadSchema
+  .pick({
+    datasetVersion: true,
+    toleranceKm: true,
+    scoringCurve: true,
+  })
+  .extend({ datasetSlug: z.string() });
 export type PublicMapPlacePayload = z.infer<typeof publicMapPlacePayloadSchema>;
 
 export const publicGeoQuestionPayloadSchema = z.discriminatedUnion('type', [

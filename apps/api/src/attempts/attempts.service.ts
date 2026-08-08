@@ -286,12 +286,16 @@ export class AttemptsService {
     let payload: PublicQuestion['payload'] = null;
 
     if (question.type === 'MAP_CLICK') {
+      const fullPayload = mapClickPayloadSchema.parse(question.payload);
+      const datasetSlug = await this.resolveDatasetSlug(fullPayload.datasetId);
       // Le payload admin (avec featureIds) n'est jamais construit dans une
       // variable exposée telle quelle : .parse() par le schéma public
       // dépouille structurellement les champs sensibles (claude.md §4).
-      payload = publicMapClickPayloadSchema.parse(mapClickPayloadSchema.parse(question.payload));
+      payload = publicMapClickPayloadSchema.parse({ ...fullPayload, datasetSlug });
     } else if (question.type === 'MAP_PLACE') {
-      payload = publicMapPlacePayloadSchema.parse(mapPlacePayloadSchema.parse(question.payload));
+      const fullPayload = mapPlacePayloadSchema.parse(question.payload);
+      const datasetSlug = await this.resolveDatasetSlug(fullPayload.datasetId);
+      payload = publicMapPlacePayloadSchema.parse({ ...fullPayload, datasetSlug });
     } else if (question.type !== 'FREE_TEXT') {
       const rawChoices = await this.prisma.choice.findMany({
         where: { questionId: question.id },
@@ -314,6 +318,17 @@ export class AttemptsService {
       choices,
       payload,
     };
+  }
+
+  /**
+   * Le payload stocké ne porte que `datasetId` (clé étrangère réelle) ; le
+   * client a besoin du slug pour construire l'URL du TopoJSON statique
+   * (apps/web/public/geo/<slug>/<version>.topojson) sans aller-retour
+   * supplémentaire — résolu ici plutôt que côté client.
+   */
+  private async resolveDatasetSlug(datasetId: string): Promise<string> {
+    const dataset = await this.prisma.geoDataset.findUniqueOrThrow({ where: { id: datasetId } });
+    return dataset.slug;
   }
 
   private async evaluateAnswer(

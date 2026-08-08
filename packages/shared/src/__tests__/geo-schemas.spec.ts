@@ -11,6 +11,7 @@ import {
 } from '../quiz/geo';
 
 const datasetId = '11111111-1111-4111-8111-111111111111';
+const datasetSlug = 'world-countries';
 
 const fullMapClickPayload = {
   datasetId,
@@ -58,22 +59,26 @@ describe('mapPlacePayloadSchema', () => {
 });
 
 describe('anti-triche : schémas publics', () => {
-  it('publicMapClickPayloadSchema ne porte jamais featureIds, même reçu en entrée', () => {
-    const result = publicMapClickPayloadSchema.parse(fullMapClickPayload);
+  // Simule ce que construit le serveur : le payload admin (avec datasetId)
+  // complété par le slug résolu, avant d'être filtré par le schéma public.
+  it('publicMapClickPayloadSchema ne porte jamais featureIds ni datasetId, même reçus en entrée', () => {
+    const result = publicMapClickPayloadSchema.parse({ ...fullMapClickPayload, datasetSlug });
     expect((result as Record<string, unknown>).featureIds).toBeUndefined();
+    expect((result as Record<string, unknown>).datasetId).toBeUndefined();
     expect(result).toEqual({
-      datasetId,
+      datasetSlug,
       datasetVersion: 'v1',
       prompt: 'Cliquez sur la France',
       distractorPolicy: 'ALL_FEATURES',
     });
   });
 
-  it('publicMapPlacePayloadSchema ne porte jamais targetLat/targetLng, même reçu en entrée', () => {
-    const result = publicMapPlacePayloadSchema.parse(fullMapPlacePayload);
+  it('publicMapPlacePayloadSchema ne porte jamais targetLat/targetLng ni datasetId, même reçus en entrée', () => {
+    const result = publicMapPlacePayloadSchema.parse({ ...fullMapPlacePayload, datasetSlug });
     expect((result as Record<string, unknown>).targetLat).toBeUndefined();
     expect((result as Record<string, unknown>).targetLng).toBeUndefined();
-    expect(result).toEqual({ datasetId, datasetVersion: 'v1', toleranceKm: 50, scoringCurve: 'LINEAR' });
+    expect((result as Record<string, unknown>).datasetId).toBeUndefined();
+    expect(result).toEqual({ datasetSlug, datasetVersion: 'v1', toleranceKm: 50, scoringCurve: 'LINEAR' });
   });
 });
 
@@ -99,7 +104,7 @@ describe('unions discriminées', () => {
   it('publicGeoQuestionPayloadSchema route aussi correctement et reste dépouillé', () => {
     const result = publicGeoQuestionPayloadSchema.parse({
       type: 'MAP_PLACE',
-      payload: fullMapPlacePayload,
+      payload: { ...fullMapPlacePayload, datasetSlug },
     });
     expect(result.type).toBe('MAP_PLACE');
     expect((result.payload as Record<string, unknown>).targetLat).toBeUndefined();

@@ -176,10 +176,12 @@ describe('Partie cartographique (e2e) — non-fuite MAP_CLICK/MAP_PLACE', () => 
     expect(createBodyText).not.toContain('targetLng');
     expect(createResponse.body.question.type).toBe('MAP_CLICK');
     expect(createResponse.body.question.payload).toMatchObject({
-      datasetId,
+      datasetSlug,
       datasetVersion: 'v1',
       prompt: 'Cliquez sur la France',
     });
+    // datasetId (uuid interne) n'est plus exposé publiquement, seul le slug l'est.
+    expect(createResponse.body.question.payload.datasetId).toBeUndefined();
 
     const currentResponse = await request(app.getHttpServer())
       .get(`/api/v1/attempts/${attemptId}/questions/current`)
@@ -213,11 +215,12 @@ describe('Partie cartographique (e2e) — non-fuite MAP_CLICK/MAP_PLACE', () => 
       .set('Cookie', cookieHeader);
     expect(nextResponse.body.question.type).toBe('MAP_PLACE');
     expect(nextResponse.body.question.payload).toMatchObject({
-      datasetId,
+      datasetSlug,
       datasetVersion: 'v1',
       toleranceKm,
       scoringCurve: 'LINEAR',
     });
+    expect(nextResponse.body.question.payload.datasetId).toBeUndefined();
     const nextBodyText = JSON.stringify(nextResponse.body);
     expect(nextBodyText).not.toContain('targetLat');
     expect(nextBodyText).not.toContain('targetLng');
