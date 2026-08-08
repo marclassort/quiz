@@ -12,9 +12,7 @@ import { useQuizSession } from '../composables/useQuizSession';
 
 // features/geo n'entre jamais dans le bundle d'entrée (frontend.md §3) :
 // chargé en chunk séparé, seulement quand une question géo apparaît.
-const MapQuestion = defineAsyncComponent(
-  () => import('@/features/geo/components/MapQuestion.vue'),
-);
+const MapQuestion = defineAsyncComponent(() => import('@/features/geo/components/MapQuestion.vue'));
 
 const props = defineProps<{ slug: string }>();
 
@@ -67,7 +65,8 @@ const canSubmit = () => {
   const question = session.currentQuestion.value;
   if (!question) return false;
   if (question.type === 'FREE_TEXT') return freeTextAnswer.value.trim().length > 0;
-  if (question.type === 'MAP_CLICK' || question.type === 'MAP_PLACE') return mapAnswer.value !== null;
+  if (question.type === 'MAP_CLICK' || question.type === 'MAP_PLACE')
+    return mapAnswer.value !== null;
   return selectedChoiceIds.value.length > 0;
 };
 </script>

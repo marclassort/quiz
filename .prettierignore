@@ -4,3 +4,4 @@ node_modules/
 coverage/
 claude.md
 apps/api/src/generated/
+apps/web/public/geo/

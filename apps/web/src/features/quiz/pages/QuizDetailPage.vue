@@ -61,7 +61,9 @@ const durationLabel = computed(() => {
     </div>
 
     <template v-else-if="quiz">
-      <BreadcrumbNav :items="[{ label: $t('nav.home'), to: { name: 'home' } }, { label: quiz.title }]" />
+      <BreadcrumbNav
+        :items="[{ label: $t('nav.home'), to: { name: 'home' } }, { label: quiz.title }]"
+      />
       <h1 class="font-display mt-4 text-2xl font-bold">{{ quiz.title }}</h1>
       <p class="mt-2 text-ink-muted">{{ quiz.description }}</p>
 

@@ -27,7 +27,10 @@ export const MAP_VIEWBOX = { width: 100, height: 60 } as const;
  * même état, donc le score est structurellement identique quel que soit le
  * mode utilisé pour répondre.
  */
-export function useMapQuestion(options: { datasetSlug: () => string; datasetVersion: () => string }) {
+export function useMapQuestion(options: {
+  datasetSlug: () => string;
+  datasetVersion: () => string;
+}) {
   const status = ref<Status>('pending');
   const errorMessage = ref<string | null>(null);
   const features = ref<MapFeature[]>([]);
@@ -61,10 +64,7 @@ export function useMapQuestion(options: { datasetSlug: () => string; datasetVers
         CountryProperties
       >;
 
-      const proj = geoNaturalEarth1().fitSize(
-        [MAP_VIEWBOX.width, MAP_VIEWBOX.height],
-        collection,
-      );
+      const proj = geoNaturalEarth1().fitSize([MAP_VIEWBOX.width, MAP_VIEWBOX.height], collection);
       projection.value = proj;
       pathGenerator.value = geoPath(proj);
 

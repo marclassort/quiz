@@ -47,9 +47,7 @@ const ariaValueNow = computed(() => Math.min(Math.max(props.current, 1), props.t
         <span
           v-else
           class="block h-2 w-2 rounded-full"
-          :class="
-            index < current ? 'bg-accent-primary' : 'border border-hairline bg-surface'
-          "
+          :class="index < current ? 'bg-accent-primary' : 'border border-hairline bg-surface'"
         />
       </span>
     </div>

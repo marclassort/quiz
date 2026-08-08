@@ -68,7 +68,10 @@ function runMapshaper(commands: string, input: Record<string, string>): Promise<
  */
 function validateTopology(topojson: string): void {
   const parsed: {
-    objects: Record<string, { geometries: { type: string | null; properties?: Record<string, unknown> }[] }>;
+    objects: Record<
+      string,
+      { geometries: { type: string | null; properties?: Record<string, unknown> }[] }
+    >;
   } = JSON.parse(topojson);
   const [layer] = Object.values(parsed.objects);
   if (!layer) {
